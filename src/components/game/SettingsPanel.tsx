@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Volume2, Music, Monitor, Globe, ZoomIn, Eye, Users, Bell, LogOut, Trash2, Shield } from 'lucide-react';
+import { Volume2, Music, Monitor, Globe, ZoomIn, Eye, Users, Bell, LogOut, Trash2, Shield, Sparkles, Battery } from 'lucide-react';
 import { useSettingsStore } from '../../store/settingsStore';
 import { useAuthStore } from '../../store/authStore';
 import { useNavigate } from 'react-router-dom';
@@ -96,6 +96,26 @@ const SettingsPanel: React.FC = () => {
           step={5}
           onChange={(v) => updateSettings({ uiScale: v / 100 })}
           suffix="%"
+        />
+
+        <SelectSetting
+          icon={<Sparkles size={16} />}
+          label="动效强度"
+          value={settings.effectsLevel}
+          options={[
+            { value: 'high', label: '高（推荐）' },
+            { value: 'low', label: '省电' },
+            { value: 'off', label: '关闭' },
+          ]}
+          onChange={(v) => updateSettings({ effectsLevel: v as SystemSettings['effectsLevel'] })}
+        />
+
+        <ToggleSetting
+          icon={<Battery size={16} />}
+          label="省电模式"
+          desc="开启后将动效强度设置为“省电”"
+          value={settings.effectsLevel !== 'high'}
+          onToggle={() => updateSettings({ effectsLevel: settings.effectsLevel === 'high' ? 'low' : 'high' })}
         />
       </SettingSection>
 
