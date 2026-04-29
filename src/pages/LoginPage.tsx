@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, User, Lock } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
+import { useSettingsStore } from '../store/settingsStore';
 import Button from '../components/ui/Button';
 
 const LoginPage: React.FC = () => {
@@ -12,10 +13,39 @@ const LoginPage: React.FC = () => {
   const loading = useAuthStore((s) => s.loading);
   const error = useAuthStore((s) => s.error);
   const clearError = useAuthStore((s) => s.clearError);
+  const effectsLevel = useSettingsStore((s) => s.settings.effectsLevel);
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPwd, setShowPwd] = useState(false);
+
+  const enableMotion = effectsLevel !== 'off';
+  const enableHigh = effectsLevel === 'high';
+
+  const stars = useMemo(() => {
+    if (!enableMotion) return [];
+    // stable star field: avoid Math.random() during render
+    const count = enableHigh ? 18 : 8;
+    const seed = 20260429;
+    let t = seed;
+    const rand = () => {
+      t += 0x6D2B79F5;
+      let r = Math.imul(t ^ (t >>> 15), t | 1);
+      r ^= r + Math.imul(r ^ (r >>> 7), r | 61);
+      return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+    };
+
+    return Array.from({ length: count }).map((_, i) => {
+      const left = rand() * 100;
+      const top = rand() * 55;
+      const warm = rand() > 0.75;
+      const opacity = rand() * (enableHigh ? 0.55 : 0.35) + 0.18;
+      const size = rand() > 0.85 ? 2 : 1;
+      const duration = 2.8 + rand() * (enableHigh ? 3.2 : 2);
+      const delay = rand() * 2.5;
+      return { i, left, top, warm, opacity, size, duration, delay };
+    });
+  }, [enableMotion, enableHigh]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,39 +63,35 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
-      {/* 背景装饰 */}
+      {/* 登录页本地装饰（少量动效，受动效强度控制） */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* 仙山轮廓 */}
-        <div
-          className="absolute bottom-0 left-0 right-0 h-1/2 opacity-20"
-          style={{
-            background: 'radial-gradient(ellipse at 50% 100%, rgba(126,203,161,0.3) 0%, transparent 70%)',
-          }}
-        />
-        {/* 云雾效果 */}
-        <div
-          className="absolute top-1/4 left-1/4 w-64 h-32 opacity-10 rounded-full"
-          style={{ background: 'radial-gradient(ellipse, #7ecba1 0%, transparent 70%)', filter: 'blur(20px)' }}
-        />
-        <div
-          className="absolute top-1/3 right-1/4 w-48 h-24 opacity-8 rounded-full"
-          style={{ background: 'radial-gradient(ellipse, #d4a843 0%, transparent 70%)', filter: 'blur(20px)' }}
-        />
-        {/* 星空 */}
-        {Array.from({ length: 30 }).map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-0.5 h-0.5 rounded-full"
+        {stars.map((s) => (
+          <motion.div
+            key={s.i}
+            className="absolute rounded-full"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 60}%`,
-              background: Math.random() > 0.7 ? '#d4a843' : '#fff',
-              opacity: Math.random() * 0.6 + 0.2,
-              animation: `float ${2 + Math.random() * 3}s ease-in-out infinite`,
-              animationDelay: `${Math.random() * 3}s`,
+              left: `${s.left}%`,
+              top: `${s.top}%`,
+              width: `${s.size}px`,
+              height: `${s.size}px`,
+              background: s.warm ? 'rgba(212,168,67,0.95)' : 'rgba(255,255,255,0.95)',
+              opacity: s.opacity,
             }}
+            animate={enableMotion ? { y: [0, -4, 0], opacity: [s.opacity, Math.min(1, s.opacity + 0.25), s.opacity] } : undefined}
+            transition={enableMotion ? { duration: s.duration, repeat: Infinity, ease: 'easeInOut', delay: s.delay } : undefined}
           />
         ))}
+
+        {/* 角色立绘（真实资源位） */}
+        <motion.img
+          src="/images/character-art.svg"
+          alt="角色立绘"
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[520px] max-w-[88vw] opacity-60"
+          style={{ filter: 'drop-shadow(0 20px 60px rgba(0,0,0,0.55))' }}
+          initial={{ opacity: 0, y: 18 }}
+          animate={enableMotion ? { opacity: 0.6, y: enableHigh ? [0, -6, 0] : 0 } : { opacity: 0.6, y: 0 }}
+          transition={enableMotion ? { duration: enableHigh ? 7 : 0.4, repeat: enableHigh ? Infinity : 0, ease: 'easeInOut' } : { duration: 0.4 }}
+        />
       </div>
 
       {/* 登录卡片 */}
@@ -78,8 +104,8 @@ const LoginPage: React.FC = () => {
         <div
           className="game-card p-8"
           style={{
-            background: 'linear-gradient(145deg, rgba(22,27,34,0.95) 0%, rgba(13,17,23,0.98) 100%)',
-            backdropFilter: 'blur(20px)',
+            background: 'linear-gradient(145deg, rgba(22,27,34,0.92) 0%, rgba(13,17,23,0.96) 100%)',
+            backdropFilter: effectsLevel === 'high' ? 'blur(18px)' : effectsLevel === 'low' ? 'blur(10px)' : undefined,
             border: '1px solid var(--color-border-gold)',
           }}
         >
@@ -88,7 +114,19 @@ const LoginPage: React.FC = () => {
 
           {/* 标题 */}
           <div className="text-center mb-8">
-            <div className="text-5xl mb-3 animate-float">⚔️</div>
+            {/* 宗门徽记（真实资源位） */}
+            <motion.div
+              className="w-20 h-20 mx-auto mb-3"
+              animate={enableMotion && enableHigh ? { rotate: [0, 3, 0, -3, 0] } : undefined}
+              transition={enableMotion && enableHigh ? { duration: 8, repeat: Infinity, ease: 'easeInOut' } : undefined}
+            >
+              <img
+                src="/images/sect-crest.svg"
+                alt="宗门徽记"
+                className="w-full h-full"
+                style={{ filter: 'drop-shadow(0 0 18px rgba(212,168,67,0.25))' }}
+              />
+            </motion.div>
             <h1 className="text-2xl font-bold tracking-widest text-glow-gold mb-1">
               天道仙途
             </h1>

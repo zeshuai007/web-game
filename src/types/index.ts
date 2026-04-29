@@ -323,6 +323,14 @@ export interface SystemSettings {
   showDamageNumbers: boolean;
   showOtherPlayers: boolean;
   notificationEnabled: boolean;
+
+  /**
+   * 动效强度
+   * - high: 默认开启全部动效
+   * - low: 省电/低端机
+   * - off: 关闭动效
+   */
+  effectsLevel: 'high' | 'low' | 'off';
 }
 
 // ==================== 货币 ====================

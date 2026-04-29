@@ -677,6 +677,7 @@ export const mockSettings: SystemSettings = {
   showDamageNumbers: true,
   showOtherPlayers: true,
   notificationEnabled: true,
+  effectsLevel: 'high',
 };
 
 // ==================== 活动 ====================
