@@ -95,6 +95,40 @@ src/
 └── main.tsx      # Application entry point
 ```
 
+## Deploy to Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/zeshuai007/web-game)
+
+### Manual Deployment Steps
+
+**1. Log in to Vercel**
+
+Visit [https://vercel.com](https://vercel.com) to sign up or log in.
+
+**2. Import the project**
+
+Click **Add New Project**, choose **Import Git Repository**, authorize access, and select the `zeshuai007/web-game` repository.
+
+**3. Confirm build settings**
+
+Vercel automatically detects this as a Vite project. No changes are required to the following defaults:
+
+| Setting | Value |
+|---|---|
+| Framework Preset | `Vite` |
+| Build Command | `npm run build` |
+| Output Directory | `dist` |
+
+**4. Click Deploy**
+
+Wait for the deployment to finish. Vercel will assign a `*.vercel.app` URL automatically.
+
+### Notes
+
+- **SPA routing**: The `vercel.json` at the repository root configures a rewrite rule that falls back all requests to `index.html`, ensuring React Router's History API routes (e.g. `/lobby`, `/cultivation`) do not return 404 on page refresh or direct navigation.
+- **Environment variables**: No environment variables are required for the current version. If you later integrate a real backend API, add variables prefixed with `VITE_` in your Vercel project under **Settings → Environment Variables**.
+- **WebSocket**: The project includes WebSocket logic (`src/ws/`). Vercel's Serverless environment does not support persistent WebSocket connections. If you need real-time features, deploy the WebSocket server separately or use a managed service such as [Ably](https://ably.com) or [Pusher](https://pusher.com).
+
 ## Contributing
 
 Issues and Pull Requests are welcome!
