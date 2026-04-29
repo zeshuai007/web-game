@@ -1,73 +1,104 @@
-# React + TypeScript + Vite
+[English](./README.en.md)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# 天道仙途 · 仙侠在线
 
-Currently, two official plugins are available:
+一款基于浏览器的古风仙侠修炼 RPG 游戏，无需下载客户端，打开即玩。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 技术栈
 
-## React Compiler
+| 技术 | 版本 |
+|---|---|
+| React | 19 |
+| TypeScript | 6 |
+| Vite | 8 |
+| Tailwind CSS | 4 |
+| Zustand | 5 |
+| Framer Motion | 12 |
+| React Router | 7 |
+| Axios | 1 |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 本地部署指南
 
-## Expanding the ESLint configuration
+### 环境要求
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Node.js** ≥ 18（推荐使用 LTS 版本）
+- **npm** ≥ 9（随 Node.js 一起安装）
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+> 可从 [https://nodejs.org](https://nodejs.org) 下载安装 Node.js。
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### 部署步骤
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+**1. 克隆仓库**
+
+```bash
+git clone https://github.com/zeshuai007/web-game.git
+cd web-game
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+**2. 安装依赖**
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
+
+**3. 启动开发服务器**
+
+```bash
+npm run dev
+```
+
+启动成功后，在浏览器中访问 [http://localhost:5173](http://localhost:5173) 即可进入游戏。
+
+**4. 构建生产版本**
+
+```bash
+npm run build
+```
+
+构建产物将输出到 `dist/` 目录。
+
+**5. 预览生产构建**
+
+```bash
+npm run preview
+```
+
+### 可用脚本
+
+| 命令 | 说明 |
+|---|---|
+| `npm run dev` | 启动开发服务器（支持热更新 HMR） |
+| `npm run build` | 类型检查 + 构建生产版本 |
+| `npm run preview` | 本地预览生产构建结果 |
+| `npm run lint` | 运行 ESLint 代码检查 |
+
+## 项目结构
+
+```
+src/
+├── api/          # 各模块 HTTP 请求封装（axios）
+├── assets/       # 静态资源（图片、字体等）
+├── components/   # 可复用 UI 组件及游戏组件
+│   ├── game/     # 游戏专属组件
+│   └── ui/       # 通用 UI 组件
+├── constants/    # 全局常量
+├── layouts/      # 页面布局组件
+├── mock/         # Mock 数据
+├── pages/        # 页面级组件（登录、大厅、修炼、背包等）
+├── router/       # 路由配置
+├── store/        # 全局状态管理（Zustand）
+├── styles/       # 全局样式
+├── types/        # TypeScript 类型定义
+├── utils/        # 工具函数
+├── ws/           # WebSocket 相关逻辑
+├── App.tsx       # 应用根组件
+└── main.tsx      # 应用入口
+```
+
+## 贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+## 许可证
+
+[MIT](./LICENSE)
