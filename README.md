@@ -95,6 +95,40 @@ src/
 └── main.tsx      # 应用入口
 ```
 
+## Vercel 一键部署
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/zeshuai007/web-game)
+
+### 手动部署步骤
+
+**1. 登录 Vercel**
+
+访问 [https://vercel.com](https://vercel.com) 注册或登录账号。
+
+**2. 导入项目**
+
+点击 **Add New Project**，选择 **Import Git Repository**，授权并选择 `zeshuai007/web-game` 仓库。
+
+**3. 确认构建配置**
+
+Vercel 会自动检测到这是一个 Vite 项目，无需手动修改以下默认配置：
+
+| 配置项 | 值 |
+|---|---|
+| Framework Preset | `Vite` |
+| Build Command | `npm run build` |
+| Output Directory | `dist` |
+
+**4. 点击 Deploy**
+
+等待部署完成，Vercel 会自动分配一个 `*.vercel.app` 访问域名。
+
+### 注意事项
+
+- **SPA 路由**：仓库根目录的 `vercel.json` 配置了路由重写规则，将所有请求回退到 `index.html`，确保 React Router 的 History API 路由（如 `/lobby`、`/cultivation`）在刷新或直接访问时不会返回 404。
+- **环境变量**：当前版本无需配置环境变量。若后续接入真实后端 API，请在 Vercel 项目的 **Settings → Environment Variables** 中添加以 `VITE_` 为前缀的变量。
+- **WebSocket**：项目包含 WebSocket 逻辑（`src/ws/`），Vercel Serverless 环境不支持持久 WebSocket 连接。若需启用实时功能，请将 WebSocket 服务单独部署，或使用 [Ably](https://ably.com)、[Pusher](https://pusher.com) 等托管服务。
+
 ## 贡献
 
 欢迎提交 Issue 和 Pull Request！
