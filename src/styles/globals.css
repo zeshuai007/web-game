@@ -1,0 +1,293 @@
+@import "tailwindcss";
+
+/* ==================== 古风仙侠主题变量 ==================== */
+:root {
+  /* 主色调 */
+  --color-ink: #0d1117;          /* 玄黑 */
+  --color-dark: #161b22;         /* 墨黑 */
+  --color-card: #1c2333;         /* 卡片背景 */
+  --color-border: #2d3748;       /* 边框 */
+  --color-border-gold: #8b6914;  /* 金色边框 */
+
+  /* 文字色 */
+  --color-text-primary: #e8dcc8;    /* 玉白（主文字） */
+  --color-text-secondary: #a89a7e;  /* 次要文字 */
+  --color-text-muted: #6b6052;      /* 弱化文字 */
+  --color-text-gold: #d4a843;       /* 金色文字 */
+  --color-text-jade: #7ecba1;       /* 玉青文字 */
+
+  /* 强调色 */
+  --color-gold: #d4a843;        /* 金色 */
+  --color-jade: #7ecba1;        /* 玉青 */
+  --color-vermillion: #c0392b;  /* 朱砂红 */
+  --color-purple: #8e44ad;      /* 紫 */
+  --color-cyan: #16a085;        /* 青碧 */
+
+  /* 渐变 */
+  --gradient-gold: linear-gradient(135deg, #d4a843 0%, #f5d77b 50%, #d4a843 100%);
+  --gradient-dark: linear-gradient(180deg, #161b22 0%, #0d1117 100%);
+  --gradient-card: linear-gradient(135deg, #1c2333 0%, #232d3f 100%);
+
+  /* 阴影 */
+  --shadow-card: 0 2px 20px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3);
+  --shadow-gold: 0 0 12px rgba(212, 168, 67, 0.3);
+  --shadow-glow: 0 0 20px rgba(126, 203, 161, 0.2);
+
+  /* 边框圆角 */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* 字体 */
+  --font-sans: 'Noto Serif SC', 'Source Han Serif SC', 'STSong', 'SimSun', serif;
+  --font-mono: 'Source Code Pro', monospace;
+}
+
+/* ==================== 重置与基础样式 ==================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-ink);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==================== 滚动条样式 ==================== */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-gold);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gold);
+}
+
+/* ==================== 古风分割线 ==================== */
+.divider-gold {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+  margin: 0.5rem 0;
+}
+
+/* ==================== 古风卡片 ==================== */
+.game-card {
+  background: var(--gradient-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+}
+
+.game-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-border-gold), transparent);
+}
+
+/* ==================== 古风按钮基础样式 ==================== */
+.btn-game {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 20px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  text-decoration: none;
+  user-select: none;
+}
+
+.btn-game:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, #8b6914, #d4a843, #8b6914);
+  color: #fef3c7;
+  border-color: #d4a843;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.btn-gold:hover {
+  background: linear-gradient(135deg, #a07a1a, #e4b84e, #a07a1a);
+  box-shadow: var(--shadow-gold);
+}
+
+.btn-jade {
+  background: linear-gradient(135deg, #0d5c3a, #7ecba1, #0d5c3a);
+  color: #ecfdf5;
+  border-color: #7ecba1;
+}
+
+.btn-jade:hover {
+  background: linear-gradient(135deg, #0f6b44, #8ee4b4, #0f6b44);
+  box-shadow: var(--shadow-glow);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--color-text-gold);
+  border-color: var(--color-border-gold);
+}
+
+.btn-outline:hover {
+  background: rgba(212, 168, 67, 0.1);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #7b1c1c, #c0392b, #7b1c1c);
+  color: #fee2e2;
+  border-color: #c0392b;
+}
+
+.btn-danger:hover {
+  background: linear-gradient(135deg, #8c2020, #d44031, #8c2020);
+}
+
+/* ==================== 稀有度颜色 ==================== */
+.rarity-common { color: #9ca3af; }
+.rarity-uncommon { color: #4ade80; }
+.rarity-rare { color: #60a5fa; }
+.rarity-epic { color: #a78bfa; }
+.rarity-legendary { color: #f59e0b; }
+.rarity-divine { color: #fde68a; }
+
+/* 稀有度边框 */
+.rarity-border-common { border-color: #374151; }
+.rarity-border-uncommon { border-color: #166534; }
+.rarity-border-rare { border-color: #1e40af; }
+.rarity-border-epic { border-color: #5b21b6; }
+.rarity-border-legendary { border-color: #92400e; }
+.rarity-border-divine { border-color: #78350f; box-shadow: 0 0 8px rgba(253, 230, 138, 0.3); }
+
+/* ==================== 进度条 ==================== */
+.progress-bar {
+  height: 6px;
+  background: var(--color-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.progress-hp { background: linear-gradient(90deg, #dc2626, #ef4444); }
+.progress-mp { background: linear-gradient(90deg, #1d4ed8, #3b82f6); }
+.progress-exp { background: linear-gradient(90deg, #d97706, #f59e0b); }
+.progress-realm { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+
+/* ==================== 动画 ==================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 0 6px rgba(212, 168, 67, 0.3); }
+  50% { box-shadow: 0 0 16px rgba(212, 168, 67, 0.6); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fade-in { animation: fadeIn 0.3s ease; }
+.animate-slide-left { animation: slideInLeft 0.3s ease; }
+.animate-slide-right { animation: slideInRight 0.3s ease; }
+.animate-pulse-gold { animation: pulse-gold 2s ease-in-out infinite; }
+.animate-float { animation: float 3s ease-in-out infinite; }
+
+/* 骨架屏加载效果 */
+.skeleton {
+  background: linear-gradient(90deg, var(--color-card) 25%, #2a3347 50%, var(--color-card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* ==================== 文字特效 ==================== */
+.text-glow-gold {
+  color: var(--color-gold);
+  text-shadow: 0 0 8px rgba(212, 168, 67, 0.6);
+}
+
+.text-glow-jade {
+  color: var(--color-jade);
+  text-shadow: 0 0 8px rgba(126, 203, 161, 0.5);
+}
+
+/* ==================== 工具类 ==================== */
+.truncate-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 自定义覆盖 tailwind */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
