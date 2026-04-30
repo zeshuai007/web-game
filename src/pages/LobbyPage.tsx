@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, animate } from 'framer-motion';
 import { usePlayerStore } from '../store/playerStore';
 import { useQuestStore } from '../store/questStore';
 import { calcProgress, formatNumber } from '../utils/index';
@@ -19,6 +19,17 @@ const LobbyPage: React.FC = () => {
   const character = usePlayerStore((s) => s.character);
   const quests = useQuestStore((s) => s.quests);
   const { enableMotion } = useMotionPrefs();
+  const [displayBP, setDisplayBP] = useState(0);
+
+  useEffect(() => {
+    if (!character) return;
+    const controls = animate(0, character.battlePower, {
+      duration: 1.2,
+      ease: 'easeOut',
+      onUpdate(v) { setDisplayBP(Math.round(v)); },
+    });
+    return controls.stop;
+  }, [character?.battlePower]);
 
   if (!character) return null;
 
@@ -49,15 +60,24 @@ const LobbyPage: React.FC = () => {
         }}
       >
         <div className="flex items-start gap-4">
+          {/* 旋转光晕头像 */}
           <div
-            className="w-16 h-16 rounded-xl flex items-center justify-center text-3xl shrink-0"
-            style={{
-              background: 'linear-gradient(135deg, #1a2540, #2d3f60)',
-              border: `2px solid ${character.realm.color}`,
-              boxShadow: `0 0 16px ${character.realm.color}44`,
-            }}
+            className="relative rounded-xl shrink-0 overflow-hidden"
+            style={{ width: 68, height: 68, boxShadow: `0 0 16px ${character.realm.color}55` }}
           >
-            {character.avatar || '⚔'}
+            <div
+              className="absolute inset-0 rounded-xl"
+              style={{
+                background: `conic-gradient(from 0deg, transparent 0%, ${character.realm.color} 35%, transparent 65%)`,
+                animation: 'borderRotate 3s linear infinite',
+              }}
+            />
+            <div
+              className="absolute inset-[2px] rounded-[10px] flex items-center justify-center text-3xl"
+              style={{ background: 'linear-gradient(135deg, #1a2540, #2d3f60)' }}
+            >
+              {character.avatar || '⚔'}
+            </div>
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-2 flex-wrap">
@@ -70,7 +90,7 @@ const LobbyPage: React.FC = () => {
                 {character.realm.name}·{character.realm.subLevel}层
               </span>
               <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-                战力 <span style={{ color: 'var(--color-gold)' }}>{formatNumber(character.battlePower)}</span>
+                战力 <span style={{ color: 'var(--color-gold)' }}>{formatNumber(displayBP)}</span>
               </span>
             </div>
             {/* 修为进度 */}
@@ -111,7 +131,7 @@ const LobbyPage: React.FC = () => {
           {/* 快速入口 */}
           <Card title="快速入口">
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {quickEnters.map((item) => (
+              {quickEnters.map((item, idx) => (
                 <motion.button
                   key={item.label}
                   whileHover={enableMotion ? { scale: 1.03, y: -2 } : undefined}
@@ -138,7 +158,13 @@ const LobbyPage: React.FC = () => {
                       {item.badge}
                     </span>
                   ) : null}
-                  <span style={{ color: item.color }}>{item.icon}</span>
+                  <motion.span
+                    style={{ color: item.color, display: 'inline-block' }}
+                    animate={{ y: [0, -4, 0] }}
+                    transition={{ duration: 2.4, ease: 'easeInOut', repeat: Infinity, delay: idx * 0.3 }}
+                  >
+                    {item.icon}
+                  </motion.span>
                   <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
                     {item.label}
                   </span>
@@ -154,8 +180,11 @@ const LobbyPage: React.FC = () => {
           <Card title="每日签到" extra={<span style={{ color: 'var(--color-jade)' }}>连签 7 天</span>}>
             <div className="grid grid-cols-7 gap-2">
               {Array.from({ length: 7 }).map((_, i) => (
-                <div
+                <motion.div
                   key={i}
+                  initial={{ scale: 0.5, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: i * 0.06, type: 'spring', stiffness: 200 }}
                   className="flex flex-col items-center gap-1 p-2 rounded-lg"
                   style={{
                     background: i < 2 ? 'rgba(212,168,67,0.1)' : 'rgba(0,0,0,0.2)',
@@ -164,7 +193,7 @@ const LobbyPage: React.FC = () => {
                 >
                   <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>第{i + 1}天</span>
                   <span className="text-base">{i < 2 ? '✅' : i === 2 ? '💎' : '🎁'}</span>
-                </div>
+                </motion.div>
               ))}
             </div>
             <Button variant="gold" size="sm" className="mt-3 w-full">

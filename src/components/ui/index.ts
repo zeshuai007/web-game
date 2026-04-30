@@ -11,3 +11,4 @@ export { default as LoadingSkeleton, SkeletonCard } from './LoadingSkeleton';
 export { default as EmptyState } from './EmptyState';
 export { default as ConfirmDialog } from './ConfirmDialog';
 export { default as SearchBar } from './SearchBar';
+export { default as ParticleBackground } from './ParticleBackground';

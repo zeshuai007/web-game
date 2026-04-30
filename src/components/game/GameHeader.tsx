@@ -44,14 +44,24 @@ const GameHeader: React.FC = () => {
         onClick={() => navigate('/character')}
         className="flex items-center gap-2 hover:opacity-80 transition-opacity"
       >
+        {/* 旋转光晕头像（小尺寸） */}
         <div
-          className="w-9 h-9 rounded-full flex items-center justify-center text-lg shrink-0"
-          style={{
-            background: 'linear-gradient(135deg, #1a2540, #2d3f60)',
-            border: '2px solid var(--color-border-gold)',
-          }}
+          className="relative rounded-full shrink-0 overflow-hidden"
+          style={{ width: 40, height: 40 }}
         >
-          {character.avatar || '⚔'}
+          <div
+            className="absolute inset-0 rounded-full"
+            style={{
+              background: `conic-gradient(from 0deg, transparent 0%, var(--color-border-gold) 35%, transparent 65%)`,
+              animation: 'borderRotate 3s linear infinite',
+            }}
+          />
+          <div
+            className="absolute inset-[2px] rounded-full flex items-center justify-center text-lg"
+            style={{ background: 'linear-gradient(135deg, #1a2540, #2d3f60)' }}
+          >
+            {character.avatar || '⚔'}
+          </div>
         </div>
         <div className="hidden sm:block text-left">
           <div className="text-xs font-semibold leading-tight" style={{ color: 'var(--color-text-gold)' }}>
