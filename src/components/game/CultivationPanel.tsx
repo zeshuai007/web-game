@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Flame, Clock, Zap, AlertTriangle, CheckCircle, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { usePlayerStore } from '../../store/playerStore';
@@ -72,10 +72,17 @@ const CULTIVATION_OPTIONS: CultivationOption[] = [
 ];
 
 const CultivationPanel: React.FC = () => {
-  const { character, cultivation, startCultivation, stopCultivation } = usePlayerStore();
+  const { character, cultivation, startCultivation, stopCultivation, updateStamina, tickCultivation } = usePlayerStore();
   const toast = useToast();
   const [showResult, setShowResult] = useState(false);
   const [resultSuccess, setResultSuccess] = useState(false);
+
+  // Bug 4: advance the cultivation timer every second while active
+  useEffect(() => {
+    if (!cultivation.isActive) return;
+    const id = setInterval(() => { tickCultivation(); }, 1000);
+    return () => clearInterval(id);
+  }, [cultivation.isActive, tickCultivation]);
 
   if (!character) return null;
 
@@ -84,6 +91,8 @@ const CultivationPanel: React.FC = () => {
       toast.error(`体力不足！需要 ${opt.staminaCost} 点体力`);
       return;
     }
+    // Bug 1: deduct stamina before starting
+    updateStamina(-opt.staminaCost);
     startCultivation(opt.mode, opt.duration);
     toast.info(`开始${CULTIVATION_MODE_NAMES[opt.mode]}...`);
   };

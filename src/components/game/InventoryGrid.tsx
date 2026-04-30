@@ -167,10 +167,11 @@ const ItemCard: React.FC<{
   onClick: () => void;
   onLockToggle: () => void;
   enableMotion: boolean;
-}> = ({ item, onClick, enableMotion }) => {
+}> = ({ item, onClick, onLockToggle, enableMotion }) => {
   return (
     <button
       onClick={onClick}
+      onContextMenu={(e) => { e.preventDefault(); onLockToggle(); }}
       className={`relative aspect-square rounded-lg flex flex-col items-center justify-center gap-1 p-1 transition-transform ${enableMotion ? 'hover:scale-105' : ''}`}
       style={{
         background: 'rgba(0,0,0,0.3)',
@@ -204,6 +205,18 @@ const ItemCard: React.FC<{
           {item.quantity > 999 ? '999+' : item.quantity}
         </span>
       )}
+      {/* lock toggle button shown on hover */}
+      <button
+        className="absolute bottom-0.5 left-0.5 p-0.5 rounded opacity-0 hover:opacity-100 focus:opacity-100 transition-opacity"
+        style={{ background: 'rgba(0,0,0,0.55)' }}
+        onClick={(e) => { e.stopPropagation(); onLockToggle(); }}
+        title={item.isLocked ? '解锁' : '锁定'}
+      >
+        {item.isLocked
+          ? <Unlock size={12} style={{ color: 'var(--color-gold)' }} />
+          : <Lock size={12} style={{ color: 'var(--color-text-muted)' }} />
+        }
+      </button>
     </button>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Bell, Menu, X, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { usePlayerStore } from '../../store/playerStore';
@@ -15,8 +15,21 @@ const GameHeader: React.FC = () => {
   const sideMenuOpen = useUIStore((s) => s.sideMenuOpen);
   const setSideMenuOpen = useUIStore((s) => s.setSideMenuOpen);
   const [showNotif, setShowNotif] = useState(false);
+  const notifRef = useRef<HTMLDivElement>(null);
   const notifications = useNotificationStore((s) => s.notifications);
   const markRead = useNotificationStore((s) => s.markRead);
+
+  // Bug 6: close notification panel when clicking outside
+  useEffect(() => {
+    if (!showNotif) return;
+    const handler = (e: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setShowNotif(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showNotif]);
 
   if (!character) return null;
 
@@ -132,7 +145,7 @@ const GameHeader: React.FC = () => {
         </div>
 
         {/* 通知按钮 */}
-        <div className="relative">
+        <div className="relative" ref={notifRef}>
           <Badge count={unreadCount}>
             <button
               onClick={() => setShowNotif(!showNotif)}

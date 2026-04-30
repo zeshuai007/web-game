@@ -51,6 +51,8 @@ const ExploreMap: React.FC = () => {
     // 随机触发事件
     if (Math.random() > 0.5 && mockRandomEvents.length > 0) {
       const evt = mockRandomEvents[Math.floor(Math.random() * mockRandomEvents.length)];
+      updateStamina(-loc.requiredStamina);
+      setShowDetail(false);
       setEvent(evt);
     } else {
       updateStamina(-loc.requiredStamina);

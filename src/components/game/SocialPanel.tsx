@@ -11,6 +11,8 @@ const SocialPanel: React.FC = () => {
   const contacts = useSocialStore((s) => s.contacts);
   const activeChannel = useSocialStore((s) => s.activeChannel);
   const setActiveChannel = useSocialStore((s) => s.setActiveChannel);
+  const setActiveContact = useSocialStore((s) => s.setActiveContact);
+  const markContactRead = useSocialStore((s) => s.markContactRead);
   const unreadPM = contacts.reduce((n, c) => n + c.unreadCount, 0);
 
   return (
@@ -28,7 +30,11 @@ const SocialPanel: React.FC = () => {
             <button
               key={c.id}
               className="w-full flex items-center gap-2 px-3 py-2.5 hover:bg-white/5 transition-colors text-left"
-              onClick={() => setActiveChannel('private')}
+              onClick={() => {
+                setActiveContact(c.id);
+                markContactRead(c.id);
+                setActiveChannel('private');
+              }}
             >
               <div className="relative shrink-0">
                 <div
@@ -92,9 +98,19 @@ const SocialPanel: React.FC = () => {
 };
 
 const ChatWindow: React.FC = () => {
-  const messages = useSocialStore((s) => s.messages);
+  const allMessages = useSocialStore((s) => s.messages);
+  const activeChannel = useSocialStore((s) => s.activeChannel);
+  const activeContactId = useSocialStore((s) => s.activeContactId);
   const sendMessage = useSocialStore((s) => s.sendMessage);
   const [input, setInput] = useState('');
+
+  // For private channel, only show messages involving the selected contact
+  const messages = activeChannel === 'private' && activeContactId
+    ? allMessages.filter(
+        (m) => m.channelType === 'private' &&
+          (m.senderId === activeContactId || m.senderId === 'user-001')
+      )
+    : allMessages;
 
   const handleSend = () => {
     const content = input.trim();

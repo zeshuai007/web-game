@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { ShoppingCart, Flame } from 'lucide-react';
 import { useShopStore } from '../../store/shopStore';
 import { usePlayerStore } from '../../store/playerStore';
-import { } from '../../constants/index';
 import type { ShopItem, ShopCategory } from '../../types/index';
 import Tabs from '../ui/Tabs';
 import Button from '../ui/Button';

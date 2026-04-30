@@ -12,6 +12,7 @@ import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import ProgressBar from '../components/ui/ProgressBar';
 import Badge from '../components/ui/Badge';
+import { useToast } from '../components/ui/Toast';
 import { Flame, Map, Scroll, Gift, Trophy, Sword } from 'lucide-react';
 
 const LobbyPage: React.FC = () => {
@@ -20,6 +21,22 @@ const LobbyPage: React.FC = () => {
   const quests = useQuestStore((s) => s.quests);
   const { enableMotion } = useMotionPrefs();
   const [displayBP, setDisplayBP] = useState(0);
+  const toast = useToast();
+
+  // Bug 8: track today's check-in via localStorage
+  const getTodayKey = () => `checkin_${new Date().toDateString()}`;
+  const [checkedIn, setCheckedIn] = useState(() => !!localStorage.getItem(getTodayKey()));
+
+  const handleCheckIn = () => {
+    const key = getTodayKey();
+    if (checkedIn && localStorage.getItem(key)) {
+      toast.info('今日机缘已领取，明日再来！');
+      return;
+    }
+    localStorage.setItem(key, '1');
+    setCheckedIn(true);
+    toast.success('机缘领取成功！获得：💎 灵石 ×500 + 🎁 修炼丹 ×3');
+  };
 
   useEffect(() => {
     if (!character) return;
@@ -187,17 +204,17 @@ const LobbyPage: React.FC = () => {
                   transition={{ delay: i * 0.06, type: 'spring', stiffness: 200 }}
                   className="flex flex-col items-center gap-1 p-2 rounded-lg"
                   style={{
-                    background: i < 2 ? 'rgba(212,168,67,0.1)' : 'rgba(0,0,0,0.2)',
-                    border: i < 2 ? '1px solid rgba(212,168,67,0.3)' : '1px solid var(--color-border)',
+                    background: (i < 2 || (i === 2 && checkedIn)) ? 'rgba(212,168,67,0.1)' : 'rgba(0,0,0,0.2)',
+                    border: (i < 2 || (i === 2 && checkedIn)) ? '1px solid rgba(212,168,67,0.3)' : '1px solid var(--color-border)',
                   }}
                 >
                   <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>第{i + 1}天</span>
-                  <span className="text-base">{i < 2 ? '✅' : i === 2 ? '💎' : '🎁'}</span>
+                  <span className="text-base">{(i < 2 || (i === 2 && checkedIn)) ? '✅' : i === 2 ? '💎' : '🎁'}</span>
                 </motion.div>
               ))}
             </div>
-            <Button variant="gold" size="sm" className="mt-3 w-full">
-              领取今日机缘
+            <Button variant="gold" size="sm" className="mt-3 w-full" onClick={handleCheckIn} disabled={checkedIn}>
+              {checkedIn ? '今日已签到' : '领取今日机缘'}
             </Button>
           </Card>
         </div>
