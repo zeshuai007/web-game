@@ -72,6 +72,12 @@ npm run preview
 | `npm run preview` | 本地预览生产构建结果 |
 | `npm run lint` | 运行 ESLint 代码检查 |
 
+## 素材与动效说明
+
+- 素材放置：建议将页面插画、徽记等静态资源放在 `public/images/` 下，并通过 `/images/...` 直接引用（例如登录页的 `/images/sect-crest.svg`）。
+- 动效开关：项目设置中有 `effectsLevel`（high/low/off），用于控制背景星点、漂浮等装饰动效强度。
+- 降级策略：当系统启用 `prefers-reduced-motion: reduce` 时，动效会自动降级/关闭，即使 `effectsLevel` 为 high。
+
 ## 项目结构
 
 ```

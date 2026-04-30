@@ -5,11 +5,7 @@ import { Eye, EyeOff, User, Lock } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import { useSettingsStore } from '../store/settingsStore';
 import Button from '../components/ui/Button';
-
-const prefersReducedMotion = () =>
-  typeof window !== 'undefined' &&
-  typeof window.matchMedia === 'function' &&
-  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+import { useMotionPrefs } from '../hooks/useMotionPrefs';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -19,19 +15,16 @@ const LoginPage: React.FC = () => {
   const error = useAuthStore((s) => s.error);
   const clearError = useAuthStore((s) => s.clearError);
   const effectsLevel = useSettingsStore((s) => s.settings.effectsLevel);
+  const { enableMotion, enableHighMotion } = useMotionPrefs();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPwd, setShowPwd] = useState(false);
 
-  const reducedMotion = prefersReducedMotion();
-  const enableMotion = effectsLevel !== 'off' && !reducedMotion;
-  const enableHigh = effectsLevel === 'high' && !reducedMotion;
-
   const stars = useMemo(() => {
     if (!enableMotion) return [];
     // stable star field: avoid Math.random() during render
-    const count = enableHigh ? 18 : 8;
+    const count = enableHighMotion ? 18 : 8;
     const seed = 20260429;
     let t = seed;
     const rand = () => {
@@ -45,13 +38,13 @@ const LoginPage: React.FC = () => {
       const left = rand() * 100;
       const top = rand() * 55;
       const warm = rand() > 0.75;
-      const opacity = rand() * (enableHigh ? 0.55 : 0.35) + 0.18;
+      const opacity = rand() * (enableHighMotion ? 0.55 : 0.35) + 0.18;
       const size = rand() > 0.85 ? 2 : 1;
-      const duration = 2.8 + rand() * (enableHigh ? 3.2 : 2);
+      const duration = 2.8 + rand() * (enableHighMotion ? 3.2 : 2);
       const delay = rand() * 2.5;
       return { i, left, top, warm, opacity, size, duration, delay };
     });
-  }, [enableMotion, enableHigh]);
+  }, [enableMotion, enableHighMotion]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,8 +88,8 @@ const LoginPage: React.FC = () => {
           className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[520px] max-w-[88vw] opacity-60"
           style={{ filter: 'drop-shadow(0 20px 60px rgba(0,0,0,0.55))' }}
           initial={{ opacity: 0, y: 18 }}
-          animate={enableMotion ? { opacity: 0.6, y: enableHigh ? [0, -6, 0] : 0 } : { opacity: 0.6, y: 0 }}
-          transition={enableMotion ? { duration: enableHigh ? 7 : 0.4, repeat: enableHigh ? Infinity : 0, ease: 'easeInOut' } : { duration: 0.4 }}
+          animate={enableMotion ? { opacity: 0.6, y: enableHighMotion ? [0, -6, 0] : 0 } : { opacity: 0.6, y: 0 }}
+          transition={enableMotion ? { duration: enableHighMotion ? 7 : 0.4, repeat: enableHighMotion ? Infinity : 0, ease: 'easeInOut' } : { duration: 0.4 }}
         />
 
         <motion.img
@@ -105,8 +98,8 @@ const LoginPage: React.FC = () => {
           className="absolute -top-16 left-1/2 -translate-x-1/2 w-[900px] max-w-[140vw] opacity-60"
           style={{ filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.55))' }}
           initial={{ opacity: 0, y: -10 }}
-          animate={enableMotion ? { opacity: 0.6, y: enableHigh ? [0, 6, 0] : 0 } : { opacity: 0.6, y: 0 }}
-          transition={enableMotion ? { duration: enableHigh ? 10 : 0.4, repeat: enableHigh ? Infinity : 0, ease: 'easeInOut' } : { duration: 0.4 }}
+          animate={enableMotion ? { opacity: 0.6, y: enableHighMotion ? [0, 6, 0] : 0 } : { opacity: 0.6, y: 0 }}
+          transition={enableMotion ? { duration: enableHighMotion ? 10 : 0.4, repeat: enableHighMotion ? Infinity : 0, ease: 'easeInOut' } : { duration: 0.4 }}
         />
       </div>
 
@@ -133,8 +126,8 @@ const LoginPage: React.FC = () => {
             {/* 宗门徽记（真实资源位） */}
             <motion.div
               className="w-20 h-20 mx-auto mb-3"
-              animate={enableMotion && enableHigh ? { rotate: [0, 3, 0, -3, 0] } : undefined}
-              transition={enableMotion && enableHigh ? { duration: 8, repeat: Infinity, ease: 'easeInOut' } : undefined}
+              animate={enableMotion && enableHighMotion ? { rotate: [0, 3, 0, -3, 0] } : undefined}
+              transition={enableMotion && enableHighMotion ? { duration: 8, repeat: Infinity, ease: 'easeInOut' } : undefined}
             >
               <img
                 src="/images/sect-crest.svg"

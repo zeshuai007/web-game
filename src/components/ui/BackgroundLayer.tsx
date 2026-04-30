@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useSettingsStore } from '../../store/settingsStore';
+import { useMotionPrefs } from '../../hooks/useMotionPrefs';
 
 type Props = {
   className?: string;
@@ -17,6 +18,7 @@ function mulberry32(seed: number) {
 
 const BackgroundLayer: React.FC<Props> = ({ className = '' }) => {
   const effectsLevel = useSettingsStore((s) => s.settings.effectsLevel);
+  const { enableMotion, enableHighMotion } = useMotionPrefs();
 
   const stars = useMemo(() => {
     if (effectsLevel === 'off') return [];
@@ -44,7 +46,7 @@ const BackgroundLayer: React.FC<Props> = ({ className = '' }) => {
     });
   }, [effectsLevel]);
 
-  const enableMotion = effectsLevel !== 'off';
+  const enableHigh = enableHighMotion;
 
   return (
     <div className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`}>
@@ -76,12 +78,12 @@ const BackgroundLayer: React.FC<Props> = ({ className = '' }) => {
         <motion.div
           className="absolute top-1/4 left-1/4 w-72 h-36 rounded-full"
           style={{
-            opacity: effectsLevel === 'high' ? 0.12 : 0.08,
+            opacity: enableHigh ? 0.12 : 0.08,
             background: 'radial-gradient(ellipse, rgba(126,203,161,0.9) 0%, transparent 72%)',
-            filter: `blur(${effectsLevel === 'high' ? 22 : 18}px)`,
+            filter: `blur(${enableHigh ? 22 : 18}px)`,
           }}
           animate={{ x: [0, 14, 0], y: [0, -8, 0] }}
-          transition={{ duration: effectsLevel === 'high' ? 8 : 10, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: enableHigh ? 8 : 10, repeat: Infinity, ease: 'easeInOut' }}
         />
       ) : (
         <div
@@ -124,4 +126,3 @@ const BackgroundLayer: React.FC<Props> = ({ className = '' }) => {
 };
 
 export default BackgroundLayer;
-
