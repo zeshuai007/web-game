@@ -6,6 +6,7 @@ import { useQuestStore } from '../store/questStore';
 import { calcProgress, formatNumber } from '../utils/index';
 import AnnouncementPanel from '../components/game/AnnouncementPanel';
 import ActivityPanel from '../components/game/ActivityPanel';
+import PageAtmosphere from '../components/ui/PageAtmosphere';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import ProgressBar from '../components/ui/ProgressBar';
@@ -32,7 +33,8 @@ const LobbyPage: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="relative space-y-6 animate-fade-in">
+      <PageAtmosphere src="/images/pages/lobby.svg" className="-z-10" opacity={0.18} />
       {/* 欢迎语 + 境界信息 */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}

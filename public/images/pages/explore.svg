@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" fill="none">
+  <defs>
+    <radialGradient id="bg" cx="55%" cy="28%" r="85%">
+      <stop offset="0%" stop-color="#7ecba1" stop-opacity="0.16"/>
+      <stop offset="40%" stop-color="#d4a843" stop-opacity="0.09"/>
+      <stop offset="100%" stop-color="#0d1117" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="path" x1="0" y1="0" x2="1600" y2="900">
+      <stop offset="0%" stop-color="#d4a843" stop-opacity="0"/>
+      <stop offset="35%" stop-color="#d4a843" stop-opacity="0.18"/>
+      <stop offset="65%" stop-color="#7ecba1" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#7ecba1" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="12"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bg)"/>
+
+  <g filter="url(#soft)" opacity="0.95">
+    <path d="M240 640 C420 520 560 520 700 600 C820 670 980 670 1120 580 C1240 500 1380 500 1480 560" stroke="url(#path)" stroke-width="14" stroke-linecap="round"/>
+    <path d="M260 720 C460 600 620 600 760 690 C900 780 1040 780 1180 690 C1300 610 1440 610 1520 650" stroke="url(#path)" stroke-width="10" stroke-linecap="round" opacity="0.6"/>
+  </g>
+
+  <g opacity="0.45">
+    <circle cx="1040" cy="320" r="210" stroke="#7ecba1" stroke-opacity="0.12" stroke-width="2"/>
+    <circle cx="1040" cy="320" r="160" stroke="#d4a843" stroke-opacity="0.10" stroke-width="2" stroke-dasharray="10 18"/>
+    <circle cx="1040" cy="320" r="110" stroke="#7ecba1" stroke-opacity="0.10" stroke-width="2"/>
+  </g>
+
+  <g opacity="0.30">
+    <circle cx="360" cy="260" r="1.6" fill="#ffffff" fill-opacity="0.7"/>
+    <circle cx="460" cy="310" r="1.4" fill="#d4a843"/>
+    <circle cx="560" cy="270" r="1.6" fill="#7ecba1"/>
+  </g>
+</svg>
+

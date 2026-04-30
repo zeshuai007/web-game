@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" fill="none">
+  <defs>
+    <radialGradient id="bg" cx="35%" cy="30%" r="85%">
+      <stop offset="0%" stop-color="#7ecba1" stop-opacity="0.16"/>
+      <stop offset="45%" stop-color="#d4a843" stop-opacity="0.09"/>
+      <stop offset="100%" stop-color="#0d1117" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="grid" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7ecba1" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#d4a843" stop-opacity="0.08"/>
+    </linearGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#bg)"/>
+
+  <g filter="url(#soft)" opacity="0.9">
+    <rect x="300" y="210" width="660" height="520" rx="26" fill="url(#grid)"/>
+    <g opacity="0.7" stroke="#d4a843" stroke-opacity="0.14" stroke-width="2">
+      <path d="M410 210 V730"/>
+      <path d="M520 210 V730"/>
+      <path d="M630 210 V730"/>
+      <path d="M740 210 V730"/>
+      <path d="M850 210 V730"/>
+      <path d="M300 320 H960"/>
+      <path d="M300 430 H960"/>
+      <path d="M300 540 H960"/>
+      <path d="M300 650 H960"/>
+    </g>
+    <circle cx="1110" cy="360" r="200" stroke="#7ecba1" stroke-opacity="0.10" stroke-width="2"/>
+    <circle cx="1110" cy="360" r="150" stroke="#7ecba1" stroke-opacity="0.10" stroke-width="2" stroke-dasharray="10 18"/>
+  </g>
+
+  <g opacity="0.30">
+    <circle cx="1220" cy="230" r="1.6" fill="#ffffff" fill-opacity="0.7"/>
+    <circle cx="1320" cy="290" r="1.4" fill="#d4a843"/>
+    <circle cx="1420" cy="250" r="1.6" fill="#7ecba1"/>
+  </g>
+</svg>
+
