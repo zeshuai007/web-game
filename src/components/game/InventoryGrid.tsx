@@ -10,6 +10,7 @@ import EmptyState from '../ui/EmptyState';
 import Badge from '../ui/Badge';
 import { Lock, Unlock } from 'lucide-react';
 import { useToast } from '../ui/Toast';
+import { useMotionPrefs } from '../../hooks/useMotionPrefs';
 
 const categories: Array<{ key: ItemCategory | 'all'; label: string }> = [
   { key: 'all', label: '全部' },
@@ -30,6 +31,7 @@ const InventoryGrid: React.FC = () => {
   const toggleLock = useInventoryStore((s) => s.toggleLock);
   const removeItem = useInventoryStore((s) => s.removeItem);
   const toast = useToast();
+  const { enableMotion } = useMotionPrefs();
 
   const [selected, setSelected] = useState<InventoryItem | null>(null);
   const [showDetail, setShowDetail] = useState(false);
@@ -88,6 +90,7 @@ const InventoryGrid: React.FC = () => {
               item={item}
               onClick={() => { setSelected(item); setShowDetail(true); }}
               onLockToggle={() => toggleLock(item.id)}
+              enableMotion={enableMotion}
             />
           ))}
         </div>
@@ -163,16 +166,28 @@ const ItemCard: React.FC<{
   item: InventoryItem;
   onClick: () => void;
   onLockToggle: () => void;
-}> = ({ item, onClick }) => {
+  enableMotion: boolean;
+}> = ({ item, onClick, enableMotion }) => {
   return (
     <button
       onClick={onClick}
-      className="relative aspect-square rounded-lg flex flex-col items-center justify-center gap-1 p-1 hover:scale-105 transition-transform"
+      className={`relative aspect-square rounded-lg flex flex-col items-center justify-center gap-1 p-1 transition-transform ${enableMotion ? 'hover:scale-105' : ''}`}
       style={{
         background: 'rgba(0,0,0,0.3)',
         border: `1px solid ${RARITY_COLORS[item.rarity]}55`,
       }}
     >
+      {enableMotion && item.rarity !== 'common' && (
+        <div
+          className="absolute -inset-6 opacity-25"
+          style={{
+            background:
+              'linear-gradient(110deg, transparent 0%, rgba(212,168,67,0.18) 40%, rgba(126,203,161,0.16) 60%, transparent 100%)',
+            transform: 'translateX(-30%)',
+            animation: 'shimmer 4.5s ease-in-out infinite',
+          }}
+        />
+      )}
       {item.isLocked && (
         <Lock
           size={8}

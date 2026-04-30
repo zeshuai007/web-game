@@ -4,6 +4,7 @@ import { usePlayerStore } from '../../store/playerStore';
 import { mockMapLocations, mockRandomEvents } from '../../mock/index';
 import { LOCATION_TYPE_NAMES } from '../../constants/index';
 import type { MapLocation, RandomEvent } from '../../types/index';
+import { useMotionPrefs } from '../../hooks/useMotionPrefs';
 import Modal from '../ui/Modal';
 import Button from '../ui/Button';
 import { useToast } from '../ui/Toast';
@@ -30,6 +31,7 @@ const ExploreMap: React.FC = () => {
   const character = usePlayerStore((s) => s.character);
   const updateStamina = usePlayerStore((s) => s.updateStamina);
   const toast = useToast();
+  const { enableMotion } = useMotionPrefs();
   const [selected, setSelected] = useState<MapLocation | null>(null);
   const [event, setEvent] = useState<RandomEvent | null>(null);
   const [showDetail, setShowDetail] = useState(false);
@@ -99,6 +101,7 @@ const ExploreMap: React.FC = () => {
             key={loc.id}
             location={loc}
             onClick={() => { setSelected(loc); setShowDetail(true); }}
+            enableMotion={enableMotion}
           />
         ))}
       </div>
@@ -172,8 +175,13 @@ const ExploreMap: React.FC = () => {
 };
 
 /** 地图节点 */
-const MapNode: React.FC<{ location: MapLocation; onClick: () => void }> = ({ location, onClick }) => {
+const MapNode: React.FC<{ location: MapLocation; onClick: () => void; enableMotion: boolean }> = ({
+  location,
+  onClick,
+  enableMotion,
+}) => {
   const color = locationStatusColors[location.status];
+  const showPulse = enableMotion && location.status !== 'locked';
 
   return (
     <button
@@ -190,6 +198,12 @@ const MapNode: React.FC<{ location: MapLocation; onClick: () => void }> = ({ loc
           boxShadow: location.status !== 'locked' ? `0 0 8px ${color}66` : 'none',
         }}
       >
+        {showPulse && (
+          <div
+            className="absolute inset-0 rounded-full animate-pulse"
+            style={{ boxShadow: `0 0 0 6px ${String(color)}22` }}
+          />
+        )}
         {location.status === 'locked' && (
           <Lock size={12} style={{ color: '#6b7280', position: 'absolute', top: -4, right: -4 }} />
         )}
