@@ -63,7 +63,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
-      <PageAtmosphere src="/images/pages/login.png" className="-z-10" opacity={0.16} />
+      <PageAtmosphere src="/images/pages/login.png" className="-z-10" opacity={0.32} />
       {/* 登录页本地装饰（少量动效，受动效强度控制） */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {stars.map((s) => (
@@ -97,10 +97,10 @@ const LoginPage: React.FC = () => {
         <motion.img
           src="/images/talisman-strip.png"
           alt="符箓光纹"
-          className="absolute -top-16 left-1/2 -translate-x-1/2 w-[900px] max-w-[140vw] opacity-60"
-          style={{ filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.55))' }}
+          className="absolute -top-16 left-1/2 -translate-x-1/2 w-[900px] max-w-[140vw] opacity-75"
+          style={{ mixBlendMode: 'screen' }}
           initial={{ opacity: 0, y: -10 }}
-          animate={enableMotion ? { opacity: 0.6, y: enableHighMotion ? [0, 6, 0] : 0 } : { opacity: 0.6, y: 0 }}
+          animate={enableMotion ? { opacity: 0.75, y: enableHighMotion ? [0, 6, 0] : 0 } : { opacity: 0.75, y: 0 }}
           transition={enableMotion ? { duration: enableHighMotion ? 10 : 0.4, repeat: enableHighMotion ? Infinity : 0, ease: 'easeInOut' } : { duration: 0.4 }}
         />
       </div>
@@ -127,7 +127,7 @@ const LoginPage: React.FC = () => {
           <div className="text-center mb-8">
             {/* 宗门徽记（真实资源位） */}
             <motion.div
-              className="w-20 h-20 mx-auto mb-3"
+              className="w-20 h-20 mx-auto mb-3 rounded-full overflow-hidden"
               animate={enableMotion && enableHighMotion ? { rotate: [0, 3, 0, -3, 0] } : undefined}
               transition={enableMotion && enableHighMotion ? { duration: 8, repeat: Infinity, ease: 'easeInOut' } : undefined}
             >
