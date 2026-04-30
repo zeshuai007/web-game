@@ -6,6 +6,11 @@ import { useAuthStore } from '../store/authStore';
 import { useSettingsStore } from '../store/settingsStore';
 import Button from '../components/ui/Button';
 
+const prefersReducedMotion = () =>
+  typeof window !== 'undefined' &&
+  typeof window.matchMedia === 'function' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const login = useAuthStore((s) => s.login);
@@ -19,8 +24,9 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [showPwd, setShowPwd] = useState(false);
 
-  const enableMotion = effectsLevel !== 'off';
-  const enableHigh = effectsLevel === 'high';
+  const reducedMotion = prefersReducedMotion();
+  const enableMotion = effectsLevel !== 'off' && !reducedMotion;
+  const enableHigh = effectsLevel === 'high' && !reducedMotion;
 
   const stars = useMemo(() => {
     if (!enableMotion) return [];
@@ -92,6 +98,16 @@ const LoginPage: React.FC = () => {
           animate={enableMotion ? { opacity: 0.6, y: enableHigh ? [0, -6, 0] : 0 } : { opacity: 0.6, y: 0 }}
           transition={enableMotion ? { duration: enableHigh ? 7 : 0.4, repeat: enableHigh ? Infinity : 0, ease: 'easeInOut' } : { duration: 0.4 }}
         />
+
+        <motion.img
+          src="/images/talisman-strip.svg"
+          alt="符箓光纹"
+          className="absolute -top-16 left-1/2 -translate-x-1/2 w-[900px] max-w-[140vw] opacity-60"
+          style={{ filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.55))' }}
+          initial={{ opacity: 0, y: -10 }}
+          animate={enableMotion ? { opacity: 0.6, y: enableHigh ? [0, 6, 0] : 0 } : { opacity: 0.6, y: 0 }}
+          transition={enableMotion ? { duration: enableHigh ? 10 : 0.4, repeat: enableHigh ? Infinity : 0, ease: 'easeInOut' } : { duration: 0.4 }}
+        />
       </div>
 
       {/* 登录卡片 */}
@@ -125,6 +141,7 @@ const LoginPage: React.FC = () => {
                 alt="宗门徽记"
                 className="w-full h-full"
                 style={{ filter: 'drop-shadow(0 0 18px rgba(212,168,67,0.25))' }}
+                draggable={false}
               />
             </motion.div>
             <h1 className="text-2xl font-bold tracking-widest text-glow-gold mb-1">
