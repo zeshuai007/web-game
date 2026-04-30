@@ -63,7 +63,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
-      <PageAtmosphere src="/images/pages/login.svg" className="-z-10" opacity={0.16} />
+      <PageAtmosphere src="/images/pages/login.png" className="-z-10" opacity={0.16} />
       {/* 登录页本地装饰（少量动效，受动效强度控制） */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {stars.map((s) => (
@@ -85,7 +85,7 @@ const LoginPage: React.FC = () => {
 
         {/* 角色立绘（真实资源位） */}
         <motion.img
-          src="/images/character-art.svg"
+          src="/images/character-art.png"
           alt="角色立绘"
           className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[520px] max-w-[88vw] opacity-60"
           style={{ filter: 'drop-shadow(0 20px 60px rgba(0,0,0,0.55))' }}
@@ -95,7 +95,7 @@ const LoginPage: React.FC = () => {
         />
 
         <motion.img
-          src="/images/talisman-strip.svg"
+          src="/images/talisman-strip.png"
           alt="符箓光纹"
           className="absolute -top-16 left-1/2 -translate-x-1/2 w-[900px] max-w-[140vw] opacity-60"
           style={{ filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.55))' }}
@@ -132,7 +132,7 @@ const LoginPage: React.FC = () => {
               transition={enableMotion && enableHighMotion ? { duration: 8, repeat: Infinity, ease: 'easeInOut' } : undefined}
             >
               <img
-                src="/images/sect-crest.svg"
+                src="/images/sect-crest.png"
                 alt="宗门徽记"
                 className="w-full h-full"
                 style={{ filter: 'drop-shadow(0 0 18px rgba(212,168,67,0.25))' }}
