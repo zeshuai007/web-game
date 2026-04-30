@@ -75,6 +75,7 @@ npm run preview
 ## 素材与动效说明
 
 - 素材放置：建议将页面插画、徽记等静态资源放在 `public/images/` 下，并通过 `/images/...` 直接引用（例如登录页的 `/images/sect-crest.svg`）。
+- 页面氛围图：页面级半透明背景大图统一放在 `public/images/pages/` 下，并通过 `PageAtmosphere` 组件接入（例如 `/images/pages/lobby.svg`）。
 - 动效开关：项目设置中有 `effectsLevel`（high/low/off），用于控制背景星点、漂浮等装饰动效强度。
 - 降级策略：当系统启用 `prefers-reduced-motion: reduce` 时，动效会自动降级/关闭，即使 `effectsLevel` 为 high。
 

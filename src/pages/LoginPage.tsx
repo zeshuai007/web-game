@@ -6,6 +6,7 @@ import { useAuthStore } from '../store/authStore';
 import { useSettingsStore } from '../store/settingsStore';
 import Button from '../components/ui/Button';
 import { useMotionPrefs } from '../hooks/useMotionPrefs';
+import PageAtmosphere from '../components/ui/PageAtmosphere';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -62,6 +63,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
+      <PageAtmosphere src="/images/pages/login.svg" className="-z-10" opacity={0.16} />
       {/* 登录页本地装饰（少量动效，受动效强度控制） */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {stars.map((s) => (
