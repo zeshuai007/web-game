@@ -6,6 +6,8 @@ import { useQuestStore } from '../store/questStore';
 import { calcProgress, formatNumber } from '../utils/index';
 import AnnouncementPanel from '../components/game/AnnouncementPanel';
 import ActivityPanel from '../components/game/ActivityPanel';
+import PageAtmosphere from '../components/ui/PageAtmosphere';
+import { useMotionPrefs } from '../hooks/useMotionPrefs';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import ProgressBar from '../components/ui/ProgressBar';
@@ -16,6 +18,7 @@ const LobbyPage: React.FC = () => {
   const navigate = useNavigate();
   const character = usePlayerStore((s) => s.character);
   const quests = useQuestStore((s) => s.quests);
+  const { enableMotion } = useMotionPrefs();
 
   if (!character) return null;
 
@@ -32,7 +35,8 @@ const LobbyPage: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="relative space-y-6 animate-fade-in">
+      <PageAtmosphere src="/images/pages/lobby.svg" className="-z-10" opacity={0.18} />
       {/* 欢迎语 + 境界信息 */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
@@ -110,8 +114,8 @@ const LobbyPage: React.FC = () => {
               {quickEnters.map((item) => (
                 <motion.button
                   key={item.label}
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
+                  whileHover={enableMotion ? { scale: 1.03, y: -2 } : undefined}
+                  whileTap={enableMotion ? { scale: 0.97 } : undefined}
                   onClick={() => navigate(item.path)}
                   className="relative flex flex-col items-center gap-2 p-4 rounded-xl transition-all"
                   style={{
@@ -119,6 +123,16 @@ const LobbyPage: React.FC = () => {
                     border: `1px solid ${item.color}33`,
                   }}
                 >
+                  {enableMotion && (
+                    <div
+                      className="absolute -inset-6 opacity-25"
+                      style={{
+                        background: `linear-gradient(110deg, transparent 0%, ${item.color}22 45%, transparent 100%)`,
+                        transform: 'translateX(-30%)',
+                        animation: 'shimmer 5s ease-in-out infinite',
+                      }}
+                    />
+                  )}
                   {item.badge && item.badge > 0 ? (
                     <span className="absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center text-xs text-white" style={{ background: 'var(--color-vermillion)' }}>
                       {item.badge}
