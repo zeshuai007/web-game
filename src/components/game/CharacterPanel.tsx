@@ -19,15 +19,26 @@ const CharacterPanel: React.FC = () => {
       {/* 角色基本信息 */}
       <div className="game-card p-4">
         <div className="flex items-center gap-4">
+          {/* 旋转光晕头像 */}
           <div
-            className="w-16 h-16 rounded-xl flex items-center justify-center text-3xl shrink-0"
-            style={{
-              background: 'linear-gradient(135deg, #1a2540, #2d3f60)',
-              border: `2px solid ${realm.color}`,
-              boxShadow: `0 0 12px ${realm.color}44`,
-            }}
+            className="relative rounded-xl shrink-0 overflow-hidden"
+            style={{ width: 68, height: 68, boxShadow: `0 0 16px ${realm.color}55` }}
           >
-            {character.avatar || '⚔'}
+            {/* 旋转渐变边框 */}
+            <div
+              className="absolute inset-0 rounded-xl"
+              style={{
+                background: `conic-gradient(from 0deg, transparent 0%, ${realm.color} 35%, transparent 65%)`,
+                animation: 'borderRotate 3s linear infinite',
+              }}
+            />
+            {/* 头像内容 */}
+            <div
+              className="absolute inset-[2px] rounded-[10px] flex items-center justify-center text-3xl"
+              style={{ background: 'linear-gradient(135deg, #1a2540, #2d3f60)' }}
+            >
+              {character.avatar || '⚔'}
+            </div>
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-2 flex-wrap">

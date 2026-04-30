@@ -291,3 +291,65 @@ body {
 /* 自定义覆盖 tailwind */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ==================== 新增动画关键帧 ==================== */
+@keyframes driftLeft {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  50% { transform: translateX(-40px) translateY(-15px); }
+}
+
+@keyframes driftRight {
+  0%, 100% { transform: translateX(0) translateY(0); }
+  50% { transform: translateX(40px) translateY(-10px); }
+}
+
+@keyframes rotateSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes borderRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.25); opacity: 0.9; }
+}
+
+@keyframes dashFlow {
+  from { stroke-dashoffset: 200; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes ripple {
+  0% { transform: scale(0); opacity: 0.45; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+@keyframes flyUp {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-80px) scale(0); opacity: 0; }
+}
+
+@keyframes pulse-jade {
+  0%, 100% { box-shadow: 0 0 6px rgba(126, 203, 161, 0.3); }
+  50% { box-shadow: 0 0 18px rgba(126, 203, 161, 0.7); }
+}
+
+/* ==================== 新增工具类 ==================== */
+.animate-breathing { animation: pulseGlow 3s ease-in-out infinite; }
+.animate-rotate-slow { animation: rotateSlow 24s linear infinite; }
+.animate-pulse-jade { animation: pulse-jade 2s ease-in-out infinite; }
+.animate-fly-up { animation: flyUp 1s ease-out forwards; }
+
+/* 按钮波纹 */
+.btn-ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple 0.5s linear;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.3);
+}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Loader2 } from 'lucide-react';
 
 type ButtonVariant = 'gold' | 'jade' | 'outline' | 'danger' | 'ghost';
@@ -25,6 +25,9 @@ const variantClasses: Record<ButtonVariant, string> = {
   ghost: 'bg-transparent text-[--color-text-secondary] hover:text-[--color-text-primary] hover:bg-white/5',
 };
 
+/** Variants that get the ripple treatment */
+const rippleVariants: ButtonVariant[] = ['gold', 'jade', 'danger'];
+
 const Button: React.FC<ButtonProps> = ({
   variant = 'gold',
   size = 'md',
@@ -33,12 +36,34 @@ const Button: React.FC<ButtonProps> = ({
   children,
   className = '',
   disabled,
+  onClick,
   ...rest
 }) => {
+  const btnRef = useRef<HTMLButtonElement>(null);
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (rippleVariants.includes(variant) && btnRef.current) {
+      const btn = btnRef.current;
+      const rect = btn.getBoundingClientRect();
+      const diameter = Math.max(rect.width, rect.height);
+      const x = e.clientX - rect.left - diameter / 2;
+      const y = e.clientY - rect.top - diameter / 2;
+
+      const ripple = document.createElement('span');
+      ripple.className = 'btn-ripple';
+      ripple.style.cssText = `width:${diameter}px;height:${diameter}px;left:${x}px;top:${y}px;`;
+      btn.appendChild(ripple);
+      ripple.addEventListener('animationend', () => ripple.remove());
+    }
+    onClick?.(e);
+  };
+
   return (
     <button
-      className={`btn-game ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+      ref={btnRef}
+      className={`btn-game ${variantClasses[variant]} ${sizeClasses[size]} ${className} ${rippleVariants.includes(variant) ? 'relative overflow-hidden' : ''}`}
       disabled={disabled || loading}
+      onClick={handleClick}
       {...rest}
     >
       {loading ? <Loader2 size={14} className="animate-spin" /> : icon}

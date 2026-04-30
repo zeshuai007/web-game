@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface ProgressBarProps {
   value: number;      // 0-100
@@ -31,7 +31,20 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   className = '',
   animated = true,
 }) => {
-  const pct = Math.min(100, Math.max(0, (value / max) * 100));
+  const targetPct = Math.min(100, Math.max(0, (value / max) * 100));
+  const isFirstRender = useRef(true);
+  const [displayPct, setDisplayPct] = useState(0);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      // Delay to allow the 0 state to paint first, then animate to target
+      const timer = setTimeout(() => setDisplayPct(targetPct), 30);
+      return () => clearTimeout(timer);
+    }
+    setDisplayPct(targetPct);
+  }, [targetPct]);
+
   const bg = color ?? variantColors[variant] ?? variantColors.exp;
 
   return (
@@ -42,7 +55,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
             {label ?? `${Math.round(value)} / ${max}`}
           </span>
           <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-            {Math.round(pct)}%
+            {Math.round(targetPct)}%
           </span>
         </div>
       )}
@@ -52,7 +65,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
       >
         <div
           className={animated ? 'transition-all duration-700 ease-out' : ''}
-          style={{ width: `${pct}%`, height: '100%', background: bg, borderRadius: 'inherit' }}
+          style={{ width: `${displayPct}%`, height: '100%', background: bg, borderRadius: 'inherit' }}
         />
       </div>
     </div>

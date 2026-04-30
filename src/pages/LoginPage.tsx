@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, User, Lock } from 'lucide-react';
@@ -22,30 +22,20 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [showPwd, setShowPwd] = useState(false);
 
-  const stars = useMemo(() => {
-    if (!enableMotion) return [];
-    // stable star field: avoid Math.random() during render
-    const count = enableHighMotion ? 18 : 8;
-    const seed = 20260429;
-    let t = seed;
-    const rand = () => {
-      t += 0x6D2B79F5;
-      let r = Math.imul(t ^ (t >>> 15), t | 1);
-      r ^= r + Math.imul(r ^ (r >>> 7), r | 61);
-      return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
-    };
-
-    return Array.from({ length: count }).map((_, i) => {
-      const left = rand() * 100;
-      const top = rand() * 55;
-      const warm = rand() > 0.75;
-      const opacity = rand() * (enableHighMotion ? 0.55 : 0.35) + 0.18;
-      const size = rand() > 0.85 ? 2 : 1;
-      const duration = 2.8 + rand() * (enableHighMotion ? 3.2 : 2);
-      const delay = rand() * 2.5;
-      return { i, left, top, warm, opacity, size, duration, delay };
-    });
-  }, [enableMotion, enableHighMotion]);
+  // Stabilized star positions to prevent re-render jitter
+  const stars = useMemo(
+    () =>
+      Array.from({ length: 40 }).map((_, i) => ({
+        id: i,
+        left: `${(i * 37 + 11) % 100}%`,
+        top: `${(i * 53 + 7) % 65}%`,
+        color: i % 3 === 0 ? '#d4a843' : '#ffffff',
+        opacity: ((i * 7 + 3) % 6) * 0.08 + 0.15,
+        duration: 2 + ((i * 11) % 3),
+        delay: (i * 0.29) % 3,
+      })),
+    [],
+  );
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,29 +53,94 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
-      <PageAtmosphere src="/images/pages/login.svg" className="-z-10" opacity={0.16} />
+      <PageAtmosphere src="/images/pages/login.png" className="-z-10" opacity={0.32} />
       {/* 登录页本地装饰（少量动效，受动效强度控制） */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* 底部仙山光晕 */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-1/2 opacity-20"
+          style={{
+            background: 'radial-gradient(ellipse at 50% 100%, rgba(126,203,161,0.3) 0%, transparent 70%)',
+          }}
+        />
+
+        {/* 漂移云雾层 1 */}
+        <div
+          className="absolute rounded-full"
+          style={{
+            width: 500,
+            height: 160,
+            top: '18%',
+            left: '5%',
+            background: 'radial-gradient(ellipse, rgba(126,203,161,0.18) 0%, transparent 70%)',
+            filter: 'blur(24px)',
+            animation: 'driftLeft 60s ease-in-out infinite',
+          }}
+        />
+        {/* 漂移云雾层 2 */}
+        <div
+          className="absolute rounded-full"
+          style={{
+            width: 420,
+            height: 120,
+            top: '30%',
+            right: '8%',
+            background: 'radial-gradient(ellipse, rgba(212,168,67,0.14) 0%, transparent 70%)',
+            filter: 'blur(20px)',
+            animation: 'driftRight 70s ease-in-out infinite',
+          }}
+        />
+        {/* 漂移云雾层 3 */}
+        <div
+          className="absolute rounded-full"
+          style={{
+            width: 340,
+            height: 100,
+            top: '50%',
+            left: '20%',
+            background: 'radial-gradient(ellipse, rgba(126,203,161,0.1) 0%, transparent 70%)',
+            filter: 'blur(30px)',
+            animation: 'driftLeft 80s ease-in-out 10s infinite',
+          }}
+        />
+
+        {/* SVG 山脉剪影 */}
+        <svg
+          className="absolute bottom-0 left-0 w-full"
+          viewBox="0 0 1440 320"
+          preserveAspectRatio="none"
+          style={{ opacity: 0.13 }}
+        >
+          {/* 远山 */}
+          <polygon
+            points="0,320 180,140 320,220 480,100 640,180 800,80 960,160 1120,60 1280,140 1440,90 1440,320"
+            fill="#7ecba1"
+          />
+          {/* 近山 */}
+          <polygon
+            points="0,320 100,220 240,280 380,180 520,250 660,160 800,230 940,140 1080,210 1220,130 1360,200 1440,160 1440,320"
+            fill="#4a7c5e"
+          />
+        </svg>
+
+        {/* 稳定星空 */}
         {stars.map((s) => (
-          <motion.div
-            key={s.i}
-            className="absolute rounded-full"
+          <div
+            key={s.id}
+            className="absolute w-0.5 h-0.5 rounded-full"
             style={{
-              left: `${s.left}%`,
-              top: `${s.top}%`,
-              width: `${s.size}px`,
-              height: `${s.size}px`,
-              background: s.warm ? 'rgba(212,168,67,0.95)' : 'rgba(255,255,255,0.95)',
+              left: s.left,
+              top: s.top,
+              background: s.color,
               opacity: s.opacity,
+              animation: `float ${s.duration}s ease-in-out ${s.delay}s infinite`,
             }}
-            animate={enableMotion ? { y: [0, -4, 0], opacity: [s.opacity, Math.min(1, s.opacity + 0.25), s.opacity] } : undefined}
-            transition={enableMotion ? { duration: s.duration, repeat: Infinity, ease: 'easeInOut', delay: s.delay } : undefined}
           />
         ))}
 
         {/* 角色立绘（真实资源位） */}
         <motion.img
-          src="/images/character-art.svg"
+          src="/images/character-art.png"
           alt="角色立绘"
           className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[520px] max-w-[88vw] opacity-60"
           style={{ filter: 'drop-shadow(0 20px 60px rgba(0,0,0,0.55))' }}
@@ -95,12 +150,12 @@ const LoginPage: React.FC = () => {
         />
 
         <motion.img
-          src="/images/talisman-strip.svg"
+          src="/images/talisman-strip.png"
           alt="符箓光纹"
-          className="absolute -top-16 left-1/2 -translate-x-1/2 w-[900px] max-w-[140vw] opacity-60"
-          style={{ filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.55))' }}
+          className="absolute -top-16 left-1/2 -translate-x-1/2 w-[900px] max-w-[140vw] opacity-75"
+          style={{ mixBlendMode: 'screen' }}
           initial={{ opacity: 0, y: -10 }}
-          animate={enableMotion ? { opacity: 0.6, y: enableHighMotion ? [0, 6, 0] : 0 } : { opacity: 0.6, y: 0 }}
+          animate={enableMotion ? { opacity: 0.75, y: enableHighMotion ? [0, 6, 0] : 0 } : { opacity: 0.75, y: 0 }}
           transition={enableMotion ? { duration: enableHighMotion ? 10 : 0.4, repeat: enableHighMotion ? Infinity : 0, ease: 'easeInOut' } : { duration: 0.4 }}
         />
       </div>
@@ -127,12 +182,12 @@ const LoginPage: React.FC = () => {
           <div className="text-center mb-8">
             {/* 宗门徽记（真实资源位） */}
             <motion.div
-              className="w-20 h-20 mx-auto mb-3"
+              className="w-20 h-20 mx-auto mb-3 rounded-full overflow-hidden"
               animate={enableMotion && enableHighMotion ? { rotate: [0, 3, 0, -3, 0] } : undefined}
               transition={enableMotion && enableHighMotion ? { duration: 8, repeat: Infinity, ease: 'easeInOut' } : undefined}
             >
               <img
-                src="/images/sect-crest.svg"
+                src="/images/sect-crest.png"
                 alt="宗门徽记"
                 className="w-full h-full"
                 style={{ filter: 'drop-shadow(0 0 18px rgba(212,168,67,0.25))' }}
@@ -145,18 +200,33 @@ const LoginPage: React.FC = () => {
             <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
               踏入修仙之路，问鼎长生之道
             </p>
-            {/* 法阵装饰 */}
-            <div
-              className="w-24 h-24 mx-auto mt-4 rounded-full flex items-center justify-center opacity-20"
-              style={{
-                border: '1px solid var(--color-gold)',
-                boxShadow: '0 0 20px rgba(212,168,67,0.2)',
-                background: 'radial-gradient(circle, rgba(212,168,67,0.05) 0%, transparent 70%)',
-              }}
-            >
+            {/* 法阵装饰 – 旋转 */}
+            <div className="relative w-24 h-24 mx-auto mt-4 flex items-center justify-center">
+              {/* 外圈旋转 */}
               <div
-                className="w-16 h-16 rounded-full"
-                style={{ border: '1px dashed var(--color-gold)' }}
+                className="absolute inset-0 rounded-full"
+                style={{
+                  border: '1px solid var(--color-gold)',
+                  opacity: 0.25,
+                  animation: 'rotateSlow 24s linear infinite',
+                }}
+              />
+              {/* 内圈反向旋转 */}
+              <div
+                className="absolute w-16 h-16 rounded-full"
+                style={{
+                  border: '1px dashed var(--color-gold)',
+                  opacity: 0.2,
+                  animation: 'rotateSlow 16s linear infinite reverse',
+                }}
+              />
+              {/* 中心光晕 */}
+              <div
+                className="w-8 h-8 rounded-full"
+                style={{
+                  background: 'radial-gradient(circle, rgba(212,168,67,0.12) 0%, transparent 70%)',
+                  boxShadow: '0 0 20px rgba(212,168,67,0.15)',
+                }}
               />
             </div>
           </div>

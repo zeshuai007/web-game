@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useMotionPrefs } from '../../hooks/useMotionPrefs';
 
 type Props = {
-  /** 路径：/images/pages/xxx.svg */
+  /** 路径：/images/pages/xxx.png 或 /images/pages/xxx.svg */
   src: string;
   className?: string;
   opacity?: number;
