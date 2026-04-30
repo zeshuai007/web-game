@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Flame, Clock, Zap, AlertTriangle, CheckCircle, X } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { usePlayerStore } from '../../store/playerStore';
 import { useToast } from '../ui/Toast';
 import Button from '../ui/Button';
@@ -102,44 +103,60 @@ const CultivationPanel: React.FC = () => {
     <div className="space-y-4 animate-fade-in">
       {/* 当前修炼状态 */}
       {cultivation.isActive && (
-        <div
-          className="game-card p-4 animate-pulse-gold"
-        >
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Flame size={16} style={{ color: 'var(--color-gold)' }} />
-              <span className="text-sm font-semibold text-glow-gold">
-                {cultivation.mode ? CULTIVATION_MODE_NAMES[cultivation.mode] : ''} 进行中
-              </span>
+        <div className="relative">
+          {/* 光晕层 */}
+          <div
+            className="absolute inset-0 rounded-xl pointer-events-none"
+            style={{
+              background: (cultivation.mode === 'breakthrough' || cultivation.mode === 'tribulation')
+                ? 'radial-gradient(ellipse at center, rgba(192,57,43,0.18) 0%, rgba(142,68,173,0.12) 50%, transparent 75%)'
+                : 'radial-gradient(ellipse at center, rgba(212,168,67,0.15) 0%, rgba(126,203,161,0.08) 50%, transparent 75%)',
+              animation: (cultivation.mode === 'breakthrough' || cultivation.mode === 'tribulation')
+                ? 'pulseGlow 1.5s ease-in-out infinite'
+                : 'pulseGlow 3s ease-in-out infinite',
+              zIndex: 0,
+            }}
+          />
+          <div
+            className="game-card p-4 animate-pulse-gold relative"
+            style={{ zIndex: 1 }}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <Flame size={16} style={{ color: 'var(--color-gold)' }} />
+                <span className="text-sm font-semibold text-glow-gold">
+                  {cultivation.mode ? CULTIVATION_MODE_NAMES[cultivation.mode] : ''} 进行中
+                </span>
+              </div>
+              <Button variant="outline" size="sm" onClick={handleStop}>
+                <X size={12} className="mr-1" /> 停止
+              </Button>
             </div>
-            <Button variant="outline" size="sm" onClick={handleStop}>
-              <X size={12} className="mr-1" /> 停止
-            </Button>
-          </div>
-          <ProgressBar value={pct} max={100} variant="realm" height={10} showLabel label={`进度 ${pct}%`} />
-          <div className="flex items-center gap-4 mt-2">
-            <div className="flex items-center gap-1">
-              <Clock size={12} style={{ color: 'var(--color-text-muted)' }} />
-              <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
-                剩余：{formatCountdown(cultivation.duration - cultivation.elapsed)}
-              </span>
-            </div>
-            {cultivation.gainPerHour > 0 && (
+            <ProgressBar value={pct} max={100} variant="realm" height={10} showLabel label={`进度 ${pct}%`} />
+            <div className="flex items-center gap-4 mt-2">
               <div className="flex items-center gap-1">
-                <Zap size={12} style={{ color: '#f59e0b' }} />
+                <Clock size={12} style={{ color: 'var(--color-text-muted)' }} />
                 <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
-                  {cultivation.gainPerHour}/时
+                  剩余：{formatCountdown(cultivation.duration - cultivation.elapsed)}
                 </span>
               </div>
-            )}
-            {cultivation.successRate < 100 && (
-              <div className="flex items-center gap-1">
-                <AlertTriangle size={12} style={{ color: '#f87171' }} />
-                <span className="text-xs" style={{ color: '#f87171' }}>
-                  成功率：{cultivation.successRate}%
-                </span>
-              </div>
-            )}
+              {cultivation.gainPerHour > 0 && (
+                <div className="flex items-center gap-1">
+                  <Zap size={12} style={{ color: '#f59e0b' }} />
+                  <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
+                    {cultivation.gainPerHour}/时
+                  </span>
+                </div>
+              )}
+              {cultivation.successRate < 100 && (
+                <div className="flex items-center gap-1">
+                  <AlertTriangle size={12} style={{ color: '#f87171' }} />
+                  <span className="text-xs" style={{ color: '#f87171' }}>
+                    成功率：{cultivation.successRate}%
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -153,7 +170,14 @@ const CultivationPanel: React.FC = () => {
               className="game-card p-4 hover:border-[--color-border-gold] transition-colors cursor-default"
             >
               <div className="flex items-start gap-3">
-                <span className="text-3xl">{opt.icon}</span>
+                <motion.span
+                  whileHover={{ rotate: [0, -10, 10, -5, 5, 0] }}
+                  transition={{ duration: 0.4 }}
+                  className="text-3xl cursor-default"
+                  style={{ display: 'inline-block' }}
+                >
+                  {opt.icon}
+                </motion.span>
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
@@ -216,23 +240,53 @@ const CultivationPanel: React.FC = () => {
           </Button>
         }
       >
-        <div className="text-center py-4">
+        <div className="relative text-center py-4 overflow-hidden">
           {resultSuccess ? (
             <>
-              <CheckCircle size={48} className="mx-auto mb-3" style={{ color: '#4ade80' }} />
-              <p className="text-base font-semibold mb-2 text-glow-jade">境界突破！</p>
-              <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                道友修为精进，境界更上一层楼，前途无量！
-              </p>
+              {/* 飘散金色粒子 */}
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-2 h-2 rounded-full"
+                  style={{
+                    background: '#d4a843',
+                    left: `${15 + i * 13}%`,
+                    bottom: '35%',
+                    animation: `flyUp ${0.8 + i * 0.12}s ease-out ${i * 0.1}s forwards`,
+                  }}
+                />
+              ))}
+              <motion.div
+                variants={{ hidden: { opacity: 0, scale: 0 }, visible: { opacity: 1, scale: 1 } }}
+                initial="hidden"
+                animate="visible"
+                transition={{ type: 'spring', stiffness: 260, damping: 18 }}
+              >
+                <CheckCircle size={48} className="mx-auto mb-3" style={{ color: '#4ade80' }} />
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <p className="text-base font-semibold mb-2 text-glow-jade">境界突破！</p>
+                <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                  道友修为精进，境界更上一层楼，前途无量！
+                </p>
+              </motion.div>
             </>
           ) : (
-            <>
+            <motion.div
+              initial={{ x: 0 }}
+              animate={{ x: [-5, 5, -3, 3, -2, 2, 0] }}
+              transition={{ duration: 0.4, ease: 'easeOut' }}
+            >
               <AlertTriangle size={48} className="mx-auto mb-3" style={{ color: '#f87171' }} />
               <p className="text-base font-semibold mb-2" style={{ color: '#f87171' }}>突破失败</p>
               <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                 天道艰险，此番突破未能成功，道友需修复伤势，再图进取。
               </p>
-            </>
+            </motion.div>
           )}
         </div>
       </Modal>

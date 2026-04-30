@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, User, Lock } from 'lucide-react';
@@ -16,6 +16,21 @@ const LoginPage: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPwd, setShowPwd] = useState(false);
+
+  // Stabilized star positions to prevent re-render jitter
+  const stars = useMemo(
+    () =>
+      Array.from({ length: 40 }).map((_, i) => ({
+        id: i,
+        left: `${(i * 37 + 11) % 100}%`,
+        top: `${(i * 53 + 7) % 65}%`,
+        color: i % 3 === 0 ? '#d4a843' : '#ffffff',
+        opacity: ((i * 7 + 3) % 6) * 0.08 + 0.15,
+        duration: 2 + ((i * 11) % 3),
+        delay: (i * 0.29) % 3,
+      })),
+    [],
+  );
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,34 +50,84 @@ const LoginPage: React.FC = () => {
     <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
       {/* 背景装饰 */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* 仙山轮廓 */}
+        {/* 底部仙山光晕 */}
         <div
           className="absolute bottom-0 left-0 right-0 h-1/2 opacity-20"
           style={{
             background: 'radial-gradient(ellipse at 50% 100%, rgba(126,203,161,0.3) 0%, transparent 70%)',
           }}
         />
-        {/* 云雾效果 */}
+
+        {/* 漂移云雾层 1 */}
         <div
-          className="absolute top-1/4 left-1/4 w-64 h-32 opacity-10 rounded-full"
-          style={{ background: 'radial-gradient(ellipse, #7ecba1 0%, transparent 70%)', filter: 'blur(20px)' }}
+          className="absolute rounded-full"
+          style={{
+            width: 500,
+            height: 160,
+            top: '18%',
+            left: '5%',
+            background: 'radial-gradient(ellipse, rgba(126,203,161,0.18) 0%, transparent 70%)',
+            filter: 'blur(24px)',
+            animation: 'driftLeft 60s ease-in-out infinite',
+          }}
         />
+        {/* 漂移云雾层 2 */}
         <div
-          className="absolute top-1/3 right-1/4 w-48 h-24 opacity-8 rounded-full"
-          style={{ background: 'radial-gradient(ellipse, #d4a843 0%, transparent 70%)', filter: 'blur(20px)' }}
+          className="absolute rounded-full"
+          style={{
+            width: 420,
+            height: 120,
+            top: '30%',
+            right: '8%',
+            background: 'radial-gradient(ellipse, rgba(212,168,67,0.14) 0%, transparent 70%)',
+            filter: 'blur(20px)',
+            animation: 'driftRight 70s ease-in-out infinite',
+          }}
         />
-        {/* 星空 */}
-        {Array.from({ length: 30 }).map((_, i) => (
+        {/* 漂移云雾层 3 */}
+        <div
+          className="absolute rounded-full"
+          style={{
+            width: 340,
+            height: 100,
+            top: '50%',
+            left: '20%',
+            background: 'radial-gradient(ellipse, rgba(126,203,161,0.1) 0%, transparent 70%)',
+            filter: 'blur(30px)',
+            animation: 'driftLeft 80s ease-in-out 10s infinite',
+          }}
+        />
+
+        {/* SVG 山脉剪影 */}
+        <svg
+          className="absolute bottom-0 left-0 w-full"
+          viewBox="0 0 1440 320"
+          preserveAspectRatio="none"
+          style={{ opacity: 0.13 }}
+        >
+          {/* 远山 */}
+          <polygon
+            points="0,320 180,140 320,220 480,100 640,180 800,80 960,160 1120,60 1280,140 1440,90 1440,320"
+            fill="#7ecba1"
+          />
+          {/* 近山 */}
+          <polygon
+            points="0,320 100,220 240,280 380,180 520,250 660,160 800,230 940,140 1080,210 1220,130 1360,200 1440,160 1440,320"
+            fill="#4a7c5e"
+          />
+        </svg>
+
+        {/* 稳定星空 */}
+        {stars.map((s) => (
           <div
-            key={i}
+            key={s.id}
             className="absolute w-0.5 h-0.5 rounded-full"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 60}%`,
-              background: Math.random() > 0.7 ? '#d4a843' : '#fff',
-              opacity: Math.random() * 0.6 + 0.2,
-              animation: `float ${2 + Math.random() * 3}s ease-in-out infinite`,
-              animationDelay: `${Math.random() * 3}s`,
+              left: s.left,
+              top: s.top,
+              background: s.color,
+              opacity: s.opacity,
+              animation: `float ${s.duration}s ease-in-out ${s.delay}s infinite`,
             }}
           />
         ))}
@@ -95,18 +160,33 @@ const LoginPage: React.FC = () => {
             <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
               踏入修仙之路，问鼎长生之道
             </p>
-            {/* 法阵装饰 */}
-            <div
-              className="w-24 h-24 mx-auto mt-4 rounded-full flex items-center justify-center opacity-20"
-              style={{
-                border: '1px solid var(--color-gold)',
-                boxShadow: '0 0 20px rgba(212,168,67,0.2)',
-                background: 'radial-gradient(circle, rgba(212,168,67,0.05) 0%, transparent 70%)',
-              }}
-            >
+            {/* 法阵装饰 – 旋转 */}
+            <div className="relative w-24 h-24 mx-auto mt-4 flex items-center justify-center">
+              {/* 外圈旋转 */}
               <div
-                className="w-16 h-16 rounded-full"
-                style={{ border: '1px dashed var(--color-gold)' }}
+                className="absolute inset-0 rounded-full"
+                style={{
+                  border: '1px solid var(--color-gold)',
+                  opacity: 0.25,
+                  animation: 'rotateSlow 24s linear infinite',
+                }}
+              />
+              {/* 内圈反向旋转 */}
+              <div
+                className="absolute w-16 h-16 rounded-full"
+                style={{
+                  border: '1px dashed var(--color-gold)',
+                  opacity: 0.2,
+                  animation: 'rotateSlow 16s linear infinite reverse',
+                }}
+              />
+              {/* 中心光晕 */}
+              <div
+                className="w-8 h-8 rounded-full"
+                style={{
+                  background: 'radial-gradient(circle, rgba(212,168,67,0.12) 0%, transparent 70%)',
+                  boxShadow: '0 0 20px rgba(212,168,67,0.15)',
+                }}
               />
             </div>
           </div>

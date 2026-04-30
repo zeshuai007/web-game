@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Lock, Star, Zap } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { usePlayerStore } from '../../store/playerStore';
 import { mockMapLocations, mockRandomEvents } from '../../mock/index';
 import { LOCATION_TYPE_NAMES } from '../../constants/index';
@@ -85,6 +86,30 @@ const ExploreMap: React.FC = () => {
             backgroundImage: 'radial-gradient(circle at 30% 40%, rgba(126,203,161,0.4) 0%, transparent 50%), radial-gradient(circle at 70% 70%, rgba(212,168,67,0.3) 0%, transparent 40%)',
           }}
         />
+
+        {/* 灵脉连接线（SVG） */}
+        <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.35 }}>
+          <defs>
+            <linearGradient id="veinGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#7ecba1" stopOpacity="0" />
+              <stop offset="50%" stopColor="#7ecba1" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#7ecba1" stopOpacity="0" />
+            </linearGradient>
+            <linearGradient id="veinGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#d4a843" stopOpacity="0" />
+              <stop offset="50%" stopColor="#d4a843" stopOpacity="0.7" />
+              <stop offset="100%" stopColor="#d4a843" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          {/* 太清宗 → 后山灵脉 */}
+          <line x1="50%" y1="50%" x2="65%" y2="40%" stroke="url(#veinGrad1)" strokeWidth="1" strokeDasharray="6 4" style={{ animation: 'dashFlow 3s linear infinite' }} />
+          {/* 太清宗 → 青云城 */}
+          <line x1="50%" y1="50%" x2="30%" y2="60%" stroke="url(#veinGrad1)" strokeWidth="1" strokeDasharray="6 4" style={{ animation: 'dashFlow 4s linear infinite' }} />
+          {/* 太清宗 → 幽暗森林 */}
+          <line x1="50%" y1="50%" x2="75%" y2="65%" stroke="url(#veinGrad2)" strokeWidth="1" strokeDasharray="6 4" style={{ animation: 'dashFlow 3.5s linear infinite reverse' }} />
+          {/* 太清宗 → 魔虎巢穴 */}
+          <line x1="50%" y1="50%" x2="55%" y2="80%" stroke="url(#veinGrad2)" strokeWidth="1" strokeDasharray="6 4" style={{ animation: 'dashFlow 5s linear infinite' }} />
+        </svg>
 
         {/* 地图标题 */}
         <div className="absolute top-3 left-3">
@@ -174,13 +199,17 @@ const ExploreMap: React.FC = () => {
 /** 地图节点 */
 const MapNode: React.FC<{ location: MapLocation; onClick: () => void }> = ({ location, onClick }) => {
   const color = locationStatusColors[location.status];
+  const isBoss = location.type === 'boss';
+  const isAvailable = location.status === 'available';
 
   return (
-    <button
+    <motion.button
       onClick={onClick}
-      className="absolute flex flex-col items-center gap-1 transform -translate-x-1/2 -translate-y-1/2 hover:scale-110 transition-transform"
+      className="absolute flex flex-col items-center gap-1 transform -translate-x-1/2 -translate-y-1/2"
       style={{ left: `${location.x}%`, top: `${location.y}%` }}
       title={location.name}
+      whileHover={{ scale: 1.15 }}
+      whileTap={{ scale: 0.92 }}
     >
       <div
         className="w-9 h-9 rounded-full flex items-center justify-center text-sm relative"
@@ -188,6 +217,7 @@ const MapNode: React.FC<{ location: MapLocation; onClick: () => void }> = ({ loc
           background: location.status === 'locked' ? 'rgba(50,50,60,0.8)' : 'rgba(0,0,0,0.6)',
           border: `2px solid ${color}`,
           boxShadow: location.status !== 'locked' ? `0 0 8px ${color}66` : 'none',
+          animation: isBoss ? 'float 3s ease-in-out infinite' : isAvailable ? 'pulse-jade 2s ease-in-out infinite' : undefined,
         }}
       >
         {location.status === 'locked' && (
@@ -209,7 +239,7 @@ const MapNode: React.FC<{ location: MapLocation; onClick: () => void }> = ({ loc
       >
         {location.name}
       </span>
-    </button>
+    </motion.button>
   );
 };
 
@@ -225,6 +255,16 @@ const RandomEventPanel: React.FC<{ event: RandomEvent | null; onClose: () => voi
     onClose();
   };
 
+  const listVariants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.05 } },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, x: -16 },
+    visible: { opacity: 1, x: 0 },
+  };
+
   return (
     <Modal
       open={!!event}
@@ -234,26 +274,41 @@ const RandomEventPanel: React.FC<{ event: RandomEvent | null; onClose: () => voi
     >
       {event && (
         <div className="space-y-4">
+          {/* Icon bounce */}
+          <motion.div
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 18 }}
+            className="text-4xl text-center"
+          >
+            {event.icon}
+          </motion.div>
           <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
             {event.description}
           </p>
-          <div className="space-y-2">
+          <motion.div
+            className="space-y-2"
+            variants={listVariants}
+            initial="hidden"
+            animate="visible"
+          >
             {event.options.map((opt) => (
-              <Button
-                key={opt.id}
-                variant="outline"
-                className="w-full justify-start text-left"
-                onClick={() => handleOption(opt)}
-              >
-                {opt.text}
-                {opt.cost && (
-                  <span className="ml-auto text-xs opacity-70">
-                    消耗 {opt.cost.amount} {opt.cost.type}
-                  </span>
-                )}
-              </Button>
+              <motion.div key={opt.id} variants={itemVariants}>
+                <Button
+                  variant="outline"
+                  className="w-full justify-start text-left"
+                  onClick={() => handleOption(opt)}
+                >
+                  {opt.text}
+                  {opt.cost && (
+                    <span className="ml-auto text-xs opacity-70">
+                      消耗 {opt.cost.amount} {opt.cost.type}
+                    </span>
+                  )}
+                </Button>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       )}
     </Modal>

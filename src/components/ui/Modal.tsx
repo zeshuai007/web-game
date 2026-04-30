@@ -33,9 +33,13 @@ const Modal: React.FC<ModalProps> = ({
   return (
     <AnimatePresence>
       {open && (
-        <div
+        <motion.div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ backdropFilter: 'blur(4px)', backgroundColor: 'rgba(0,0,0,0.7)' }}
+          style={{ backdropFilter: 'blur(4px)' }}
+          initial={{ backgroundColor: 'rgba(0,0,0,0)' }}
+          animate={{ backgroundColor: 'rgba(0,0,0,0.7)' }}
+          exit={{ backgroundColor: 'rgba(0,0,0,0)' }}
+          transition={{ duration: 0.25 }}
           onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
           <motion.div
@@ -81,7 +85,7 @@ const Modal: React.FC<ModalProps> = ({
               </div>
             )}
           </motion.div>
-        </div>
+        </motion.div>
       )}
     </AnimatePresence>
   );
