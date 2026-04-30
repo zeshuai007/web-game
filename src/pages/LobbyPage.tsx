@@ -36,7 +36,7 @@ const LobbyPage: React.FC = () => {
 
   return (
     <div className="relative space-y-6 animate-fade-in">
-      <PageAtmosphere src="/images/pages/lobby.svg" className="-z-10" opacity={0.18} />
+      <PageAtmosphere src="/images/pages/lobby.png" className="-z-10" opacity={0.18} />
       {/* 欢迎语 + 境界信息 */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}

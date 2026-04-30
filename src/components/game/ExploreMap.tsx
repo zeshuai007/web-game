@@ -76,15 +76,23 @@ const ExploreMap: React.FC = () => {
         className="relative w-full rounded-xl overflow-hidden"
         style={{
           height: 420,
-          background: 'radial-gradient(ellipse at center, #0a1628 0%, #050c18 100%)',
+          background: '#050c18',
           border: '1px solid var(--color-border-gold)',
         }}
       >
-        {/* 背景装饰 */}
+        {/* 地图背景图 */}
+        <img
+          src="/images/explore-map-bg.png"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover opacity-55 pointer-events-none select-none"
+          draggable={false}
+        />
+        {/* 色调叠加，增强节点可读性 */}
         <div
-          className="absolute inset-0 opacity-10"
+          className="absolute inset-0"
           style={{
-            backgroundImage: 'radial-gradient(circle at 30% 40%, rgba(126,203,161,0.4) 0%, transparent 50%), radial-gradient(circle at 70% 70%, rgba(212,168,67,0.3) 0%, transparent 40%)',
+            backgroundImage: 'radial-gradient(circle at 30% 40%, rgba(126,203,161,0.15) 0%, transparent 50%), radial-gradient(circle at 70% 70%, rgba(212,168,67,0.12) 0%, transparent 40%)',
           }}
         />
 
