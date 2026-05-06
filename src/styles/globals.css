@@ -31,7 +31,17 @@
   /* 阴影 */
   --shadow-card: 0 2px 20px rgba(0, 0, 0, 0.5), 0 1px 4px rgba(0, 0, 0, 0.3);
   --shadow-gold: 0 0 12px rgba(212, 168, 67, 0.3);
+  --shadow-gold-intense: 0 0 24px rgba(212, 168, 67, 0.5);
   --shadow-glow: 0 0 20px rgba(126, 203, 161, 0.2);
+  --shadow-glow-intense: 0 0 30px rgba(126, 203, 161, 0.4);
+  --shadow-danger: 0 0 16px rgba(192, 57, 43, 0.4);
+  --shadow-purple: 0 0 20px rgba(139, 68, 173, 0.4);
+
+  /* 发光效果 */
+  --glow-gold: 0 0 12px rgba(212, 168, 67, 0.6), 0 0 24px rgba(212, 168, 67, 0.3);
+  --glow-jade: 0 0 12px rgba(126, 203, 161, 0.6), 0 0 24px rgba(126, 203, 161, 0.3);
+  --glow-vermillion: 0 0 12px rgba(192, 57, 43, 0.6), 0 0 24px rgba(192, 57, 43, 0.3);
+  --glow-purple: 0 0 12px rgba(139, 68, 173, 0.6), 0 0 24px rgba(139, 68, 173, 0.3);
 
   /* 边框圆角 */
   --radius-sm: 4px;
@@ -151,42 +161,66 @@ body {
   color: #fef3c7;
   border-color: #d4a843;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .btn-gold:hover {
   background: linear-gradient(135deg, #a07a1a, #e4b84e, #a07a1a);
-  box-shadow: var(--shadow-gold);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), var(--shadow-gold-intense);
+  transform: translateY(-1px);
+}
+
+.btn-gold:active {
+  transform: translateY(0);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .btn-jade {
   background: linear-gradient(135deg, #0d5c3a, #7ecba1, #0d5c3a);
   color: #ecfdf5;
   border-color: #7ecba1;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .btn-jade:hover {
   background: linear-gradient(135deg, #0f6b44, #8ee4b4, #0f6b44);
-  box-shadow: var(--shadow-glow);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), var(--shadow-glow-intense);
+  transform: translateY(-1px);
+}
+
+.btn-jade:active {
+  transform: translateY(0);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .btn-outline {
   background: transparent;
   color: var(--color-text-gold);
   border-color: var(--color-border-gold);
+  box-shadow: inset 0 0 0 1px rgba(212, 168, 67, 0.5);
 }
 
 .btn-outline:hover {
   background: rgba(212, 168, 67, 0.1);
+  box-shadow: inset 0 0 0 1px var(--color-gold), var(--shadow-gold);
 }
 
 .btn-danger {
   background: linear-gradient(135deg, #7b1c1c, #c0392b, #7b1c1c);
   color: #fee2e2;
   border-color: #c0392b;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .btn-danger:hover {
   background: linear-gradient(135deg, #8c2020, #d44031, #8c2020);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), var(--shadow-danger);
+  transform: translateY(-1px);
+}
+
+.btn-danger:active {
+  transform: translateY(0);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* ==================== 稀有度颜色 ==================== */
@@ -199,30 +233,64 @@ body {
 
 /* 稀有度边框 */
 .rarity-border-common { border-color: #374151; }
-.rarity-border-uncommon { border-color: #166534; }
-.rarity-border-rare { border-color: #1e40af; }
-.rarity-border-epic { border-color: #5b21b6; }
-.rarity-border-legendary { border-color: #92400e; }
-.rarity-border-divine { border-color: #78350f; box-shadow: 0 0 8px rgba(253, 230, 138, 0.3); }
+.rarity-border-uncommon { border-color: #166534; box-shadow: 0 0 8px rgba(74, 222, 128, 0.2); }
+.rarity-border-rare { border-color: #1e40af; box-shadow: 0 0 12px rgba(96, 165, 250, 0.3); }
+.rarity-border-epic { border-color: #5b21b6; box-shadow: 0 0 14px rgba(167, 139, 250, 0.4); }
+.rarity-border-legendary { border-color: #92400e; box-shadow: 0 0 16px rgba(245, 158, 11, 0.5); }
+.rarity-border-divine { border-color: #78350f; box-shadow: 0 0 20px rgba(253, 230, 138, 0.6); animation: pulse-gold 2s ease-in-out infinite; }
+
+/* 稀有度发光效果 */
+.rarity-glow-common { }
+.rarity-glow-uncommon { box-shadow: 0 0 8px rgba(74, 222, 128, 0.3); }
+.rarity-glow-rare { box-shadow: 0 0 12px rgba(96, 165, 250, 0.4); }
+.rarity-glow-epic { box-shadow: 0 0 16px rgba(167, 139, 250, 0.5); }
+.rarity-glow-legendary { box-shadow: 0 0 20px rgba(245, 158, 11, 0.6); }
+.rarity-glow-divine { box-shadow: 0 0 24px rgba(253, 230, 138, 0.7); animation: pulse-gold 1.5s ease-in-out infinite; }
 
 /* ==================== 进度条 ==================== */
 .progress-bar {
   height: 6px;
-  background: var(--color-border);
+  background: rgba(45, 55, 72, 0.8);
   border-radius: 3px;
   overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .progress-bar-fill {
   height: 100%;
   border-radius: 3px;
   transition: width 0.5s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.progress-hp { background: linear-gradient(90deg, #dc2626, #ef4444); }
-.progress-mp { background: linear-gradient(90deg, #1d4ed8, #3b82f6); }
-.progress-exp { background: linear-gradient(90deg, #d97706, #f59e0b); }
-.progress-realm { background: linear-gradient(90deg, #7c3aed, #a78bfa); }
+.progress-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: shimmer 2s infinite;
+}
+
+.progress-hp { 
+  background: linear-gradient(90deg, #dc2626, #ef4444); 
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
+}
+.progress-mp { 
+  background: linear-gradient(90deg, #1d4ed8, #3b82f6); 
+  box-shadow: 0 0 6px rgba(59, 130, 246, 0.4);
+}
+.progress-exp { 
+  background: linear-gradient(90deg, #d97706, #f59e0b); 
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+}
+.progress-realm { 
+  background: linear-gradient(90deg, #7c3aed, #a78bfa); 
+  box-shadow: 0 0 6px rgba(167, 139, 250, 0.4);
+}
 
 /* ==================== 动画 ==================== */
 @keyframes fadeIn {
