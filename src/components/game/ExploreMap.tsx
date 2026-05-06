@@ -82,18 +82,44 @@ const ExploreMap: React.FC = () => {
         }}
       >
         {/* 地图背景图 */}
-        <img
+        <motion.img
           src="/images/explore-map-bg.png"
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover opacity-55 pointer-events-none select-none"
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
+          style={{ 
+            opacity: 0.65,
+            filter: 'saturate(1.1) contrast(1.05)',
+          }}
           draggable={false}
+          initial={{ opacity: 0, scale: 1.02 }}
+          animate={{ opacity: 0.65, scale: [1.02, 1.03, 1.02] }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
         />
-        {/* 色调叠加，增强节点可读性 */}
-        <div
+        
+        {/* 动态光照效果 */}
+        <motion.div
           className="absolute inset-0"
           style={{
-            backgroundImage: 'radial-gradient(circle at 30% 40%, rgba(126,203,161,0.15) 0%, transparent 50%), radial-gradient(circle at 70% 70%, rgba(212,168,67,0.12) 0%, transparent 40%)',
+            backgroundImage: 'radial-gradient(circle at 30% 40%, rgba(126,203,161,0.18) 0%, transparent 50%), radial-gradient(circle at 70% 70%, rgba(212,168,67,0.15) 0%, transparent 40%)',
+          }}
+          animate={{ opacity: [0.8, 1, 0.8] }}
+          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        
+        {/* 角落光晕装饰 */}
+        <div
+          className="absolute top-0 left-0 w-48 h-48 rounded-full pointer-events-none"
+          style={{
+            background: 'radial-gradient(circle, rgba(126,203,161,0.12) 0%, transparent 70%)',
+            filter: 'blur(20px)',
+          }}
+        />
+        <div
+          className="absolute bottom-0 right-0 w-56 h-56 rounded-full pointer-events-none"
+          style={{
+            background: 'radial-gradient(circle, rgba(212,168,67,0.1) 0%, transparent 70%)',
+            filter: 'blur(24px)',
           }}
         />
 

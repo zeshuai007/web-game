@@ -22,7 +22,6 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [showPwd, setShowPwd] = useState(false);
 
-  // Stabilized star positions to prevent re-render jitter
   const stars = useMemo(
     () =>
       Array.from({ length: 40 }).map((_, i) => ({
@@ -53,18 +52,22 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
-      <PageAtmosphere src="/images/pages/login.png" className="-z-10" opacity={0.32} />
-      {/* 登录页本地装饰（少量动效，受动效强度控制） */}
+      <PageAtmosphere 
+        src="/images/pages/login.png" 
+        className="-z-10" 
+        opacity={0.38}
+        parallax={false}
+        mixBlendMode="soft-light"
+        glowColor="rgba(212, 168, 67, 0.15)"
+      />
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* 底部仙山光晕 */}
         <div
-          className="absolute bottom-0 left-0 right-0 h-1/2 opacity-20"
+          className="absolute bottom-0 left-0 right-0 h-2/3"
           style={{
-            background: 'radial-gradient(ellipse at 50% 100%, rgba(126,203,161,0.3) 0%, transparent 70%)',
+            background: 'radial-gradient(ellipse at 50% 100%, rgba(126,203,161,0.25) 0%, rgba(212,168,67,0.1) 40%, transparent 70%)',
           }}
         />
 
-        {/* 漂移云雾层 1 */}
         <div
           className="absolute rounded-full"
           style={{
@@ -77,7 +80,6 @@ const LoginPage: React.FC = () => {
             animation: 'driftLeft 60s ease-in-out infinite',
           }}
         />
-        {/* 漂移云雾层 2 */}
         <div
           className="absolute rounded-full"
           style={{
@@ -90,7 +92,6 @@ const LoginPage: React.FC = () => {
             animation: 'driftRight 70s ease-in-out infinite',
           }}
         />
-        {/* 漂移云雾层 3 */}
         <div
           className="absolute rounded-full"
           style={{
@@ -104,26 +105,22 @@ const LoginPage: React.FC = () => {
           }}
         />
 
-        {/* SVG 山脉剪影 */}
         <svg
           className="absolute bottom-0 left-0 w-full"
           viewBox="0 0 1440 320"
           preserveAspectRatio="none"
           style={{ opacity: 0.13 }}
         >
-          {/* 远山 */}
           <polygon
             points="0,320 180,140 320,220 480,100 640,180 800,80 960,160 1120,60 1280,140 1440,90 1440,320"
             fill="#7ecba1"
           />
-          {/* 近山 */}
           <polygon
             points="0,320 100,220 240,280 380,180 520,250 660,160 800,230 940,140 1080,210 1220,130 1360,200 1440,160 1440,320"
             fill="#4a7c5e"
           />
         </svg>
 
-        {/* 稳定星空 */}
         {stars.map((s) => (
           <div
             key={s.id}
@@ -138,29 +135,47 @@ const LoginPage: React.FC = () => {
           />
         ))}
 
-        {/* 角色立绘（真实资源位） */}
+        {/* Character Art - Enhanced Effects */}
         <motion.img
           src="/images/character-art.png"
-          alt="角色立绘"
-          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[520px] max-w-[88vw] opacity-60"
-          style={{ filter: 'drop-shadow(0 20px 60px rgba(0,0,0,0.55))' }}
-          initial={{ opacity: 0, y: 18 }}
-          animate={enableMotion ? { opacity: 0.6, y: enableHighMotion ? [0, -6, 0] : 0 } : { opacity: 0.6, y: 0 }}
-          transition={enableMotion ? { duration: enableHighMotion ? 7 : 0.4, repeat: enableHighMotion ? Infinity : 0, ease: 'easeInOut' } : { duration: 0.4 }}
+          alt="character"
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[560px] max-w-[90vw]"
+          style={{ 
+            opacity: 0.7,
+            filter: 'drop-shadow(0 25px 80px rgba(0,0,0,0.6)) drop-shadow(0 0 40px rgba(212,168,67,0.15))',
+          }}
+          initial={{ opacity: 0, y: 24, scale: 0.95 }}
+          animate={enableMotion ? { opacity: 0.7, y: enableHighMotion ? [0, -8, 0] : 0, scale: 1 } : { opacity: 0.7, y: 0, scale: 1 }}
+          transition={enableMotion ? { duration: enableHighMotion ? 8 : 0.5, repeat: enableHighMotion ? Infinity : 0, ease: 'easeInOut' } : { duration: 0.5 }}
+        />
+        
+        {/* Character glow effect */}
+        <motion.div
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[400px] h-[200px]"
+          style={{
+            background: 'radial-gradient(ellipse at 50% 100%, rgba(212,168,67,0.15) 0%, rgba(126,203,161,0.1) 40%, transparent 70%)',
+            filter: 'blur(30px)',
+          }}
+          animate={enableMotion && enableHighMotion ? { opacity: [0.8, 1, 0.8] } : { opacity: 1 }}
+          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
         />
 
+        {/* Talisman Strip - Enhanced Effects */}
         <motion.img
           src="/images/talisman-strip.png"
-          alt="符箓光纹"
-          className="absolute -top-16 left-1/2 -translate-x-1/2 w-[900px] max-w-[140vw] opacity-75"
-          style={{ mixBlendMode: 'screen' }}
-          initial={{ opacity: 0, y: -10 }}
-          animate={enableMotion ? { opacity: 0.75, y: enableHighMotion ? [0, 6, 0] : 0 } : { opacity: 0.75, y: 0 }}
-          transition={enableMotion ? { duration: enableHighMotion ? 10 : 0.4, repeat: enableHighMotion ? Infinity : 0, ease: 'easeInOut' } : { duration: 0.4 }}
+          alt="talisman"
+          className="absolute -top-20 left-1/2 -translate-x-1/2 w-[1000px] max-w-[150vw]"
+          style={{ 
+            opacity: 0.85,
+            mixBlendMode: 'screen',
+            filter: 'drop-shadow(0 0 30px rgba(212,168,67,0.4))',
+          }}
+          initial={{ opacity: 0, y: -15, scale: 1.05 }}
+          animate={enableMotion ? { opacity: 0.85, y: enableHighMotion ? [0, 8, 0] : 0, scale: enableHighMotion ? [1, 1.02, 1] : 1 } : { opacity: 0.85, y: 0, scale: 1 }}
+          transition={enableMotion ? { duration: enableHighMotion ? 12 : 0.5, repeat: enableHighMotion ? Infinity : 0, ease: 'easeInOut' } : { duration: 0.5 }}
         />
       </div>
 
-      {/* 登录卡片 */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -173,67 +188,77 @@ const LoginPage: React.FC = () => {
             background: 'linear-gradient(145deg, rgba(22,27,34,0.92) 0%, rgba(13,17,23,0.96) 100%)',
             backdropFilter: effectsLevel === 'high' ? 'blur(18px)' : effectsLevel === 'low' ? 'blur(10px)' : undefined,
             border: '1px solid var(--color-border-gold)',
+            boxShadow: '0 0 40px rgba(212,168,67,0.1)',
           }}
         >
-          {/* 顶部装饰 */}
           <div className="divider-gold mb-6" />
 
-          {/* 标题 */}
           <div className="text-center mb-8">
-            {/* 宗门徽记（真实资源位） */}
+            {/* Sect Crest - Enhanced Effects */}
             <motion.div
-              className="w-20 h-20 mx-auto mb-3 rounded-full overflow-hidden"
+              className="relative w-20 h-20 mx-auto mb-3"
               animate={enableMotion && enableHighMotion ? { rotate: [0, 3, 0, -3, 0] } : undefined}
               transition={enableMotion && enableHighMotion ? { duration: 8, repeat: Infinity, ease: 'easeInOut' } : undefined}
             >
-              <img
-                src="/images/sect-crest.png"
-                alt="宗门徽记"
-                className="w-full h-full"
-                style={{ filter: 'drop-shadow(0 0 18px rgba(212,168,67,0.25))' }}
-                draggable={false}
+              <div
+                className="absolute inset-0 rounded-full"
+                style={{
+                  background: 'radial-gradient(circle, rgba(212,168,67,0.2) 0%, transparent 70%)',
+                  animation: 'pulse-gold 2s ease-in-out infinite',
+                }}
               />
+              <div
+                className="absolute inset-2 rounded-full overflow-hidden border-2 border-[var(--color-border-gold)]"
+                style={{
+                  boxShadow: '0 0 20px rgba(212,168,67,0.3)',
+                }}
+              >
+                <img
+                  src="/images/sect-crest.png"
+                  alt="crest"
+                  className="w-full h-full"
+                  style={{ filter: 'drop-shadow(0 0 20px rgba(212,168,67,0.4)) saturate(1.2)' }}
+                  draggable={false}
+                />
+              </div>
             </motion.div>
+            
             <h1 className="text-2xl font-bold tracking-widest text-glow-gold mb-1">
               天道仙途
             </h1>
             <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
               踏入修仙之路，问鼎长生之道
             </p>
-            {/* 法阵装饰 – 旋转 */}
+            
             <div className="relative w-24 h-24 mx-auto mt-4 flex items-center justify-center">
-              {/* 外圈旋转 */}
               <div
                 className="absolute inset-0 rounded-full"
                 style={{
                   border: '1px solid var(--color-gold)',
-                  opacity: 0.25,
+                  opacity: 0.3,
                   animation: 'rotateSlow 24s linear infinite',
+                  boxShadow: '0 0 10px rgba(212,168,67,0.2)',
                 }}
               />
-              {/* 内圈反向旋转 */}
               <div
                 className="absolute w-16 h-16 rounded-full"
                 style={{
                   border: '1px dashed var(--color-gold)',
-                  opacity: 0.2,
+                  opacity: 0.25,
                   animation: 'rotateSlow 16s linear infinite reverse',
                 }}
               />
-              {/* 中心光晕 */}
               <div
                 className="w-8 h-8 rounded-full"
                 style={{
-                  background: 'radial-gradient(circle, rgba(212,168,67,0.12) 0%, transparent 70%)',
-                  boxShadow: '0 0 20px rgba(212,168,67,0.15)',
+                  background: 'radial-gradient(circle, rgba(212,168,67,0.15) 0%, transparent 70%)',
+                  boxShadow: '0 0 25px rgba(212,168,67,0.2)',
                 }}
               />
             </div>
           </div>
 
-          {/* 登录表单 */}
           <form onSubmit={handleLogin} className="space-y-4">
-            {/* 用户名 */}
             <div>
               <div
                 className="flex items-center gap-3 px-4 py-3 rounded-lg"
@@ -255,7 +280,6 @@ const LoginPage: React.FC = () => {
               </div>
             </div>
 
-            {/* 密码 */}
             <div>
               <div
                 className="flex items-center gap-3 px-4 py-3 rounded-lg"
@@ -287,7 +311,6 @@ const LoginPage: React.FC = () => {
               </div>
             </div>
 
-            {/* 错误提示 */}
             {error && (
               <div
                 className="px-4 py-2 rounded-lg text-sm"
@@ -297,7 +320,6 @@ const LoginPage: React.FC = () => {
               </div>
             )}
 
-            {/* 登录按钮 */}
             <Button
               type="submit"
               variant="gold"
@@ -310,7 +332,6 @@ const LoginPage: React.FC = () => {
 
           <div className="divider-gold my-4" />
 
-          {/* 游客入口 */}
           <Button
             variant="outline"
             className="w-full"
@@ -320,7 +341,6 @@ const LoginPage: React.FC = () => {
             以散修身份游历
           </Button>
 
-          {/* 注册入口 */}
           <div className="mt-4 text-center">
             <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
               尚未拜入宗门？{' '}
