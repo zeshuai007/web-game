@@ -38,7 +38,7 @@ const authApi = {
   },
 
   /** 注册 */
-  register: async (_:  { username: string; password: string; email: string }): Promise<void> => {
+  register: async (): Promise<void> => {
     // TODO: 接入真实注册接口
     await new Promise((r) => setTimeout(r, 1000));
   },

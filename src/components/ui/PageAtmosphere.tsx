@@ -6,8 +6,6 @@ type Props = {
   src: string;
   className?: string;
   opacity?: number;
-  parallax?: boolean;
-  parallaxIntensity?: number;
   mixBlendMode?: 'normal' | 'multiply' | 'screen' | 'overlay' | 'soft-light';
   glow?: boolean;
   glowColor?: string;
@@ -18,8 +16,6 @@ const PageAtmosphere: React.FC<Props> = ({
   src,
   className = '',
   opacity = 0.3,
-  parallax = false,
-  parallaxIntensity = 20,
   mixBlendMode = 'normal',
   glow = true,
   glowColor = 'rgba(212, 168, 67, 0.2)',

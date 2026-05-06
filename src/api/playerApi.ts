@@ -6,7 +6,7 @@ import type { Character } from '../types/index';
 
 const playerApi = {
   /** 获取角色信息 */
-  getCharacter: async (_userId: string): Promise<Character> => {
+  getCharacter: async (): Promise<Character> => {
     // TODO: http.get<Character>(`/player/${userId}`)
     await new Promise((r) => setTimeout(r, 300));
     return mockCharacter;

@@ -56,7 +56,6 @@ const LoginPage: React.FC = () => {
         src="/images/pages/login.png" 
         className="-z-10" 
         opacity={0.38}
-        parallax={false}
         mixBlendMode="soft-light"
         glowColor="rgba(212, 168, 67, 0.15)"
       />
