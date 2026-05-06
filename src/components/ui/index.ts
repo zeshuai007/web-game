@@ -12,3 +12,5 @@ export { default as EmptyState } from './EmptyState';
 export { default as ConfirmDialog } from './ConfirmDialog';
 export { default as SearchBar } from './SearchBar';
 export { default as ParticleBackground } from './ParticleBackground';
+export { default as GlowText } from './GlowText';
+export { default as AnimatedNumber } from './AnimatedNumber';
