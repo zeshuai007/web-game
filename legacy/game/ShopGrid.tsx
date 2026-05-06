@@ -7,7 +7,7 @@ import type { ShopItem, ShopCategory } from '../../types/index';
 import Tabs from '../ui/Tabs';
 import Button from '../ui/Button';
 import ConfirmDialog from '../ui/ConfirmDialog';
-import { useToast } from '../ui/Toast';
+import { useToast } from '../../hooks/useToast';
 import { formatNumber } from '../../utils/index';
 
 const categories: Array<{ key: ShopCategory | 'all'; label: string }> = [

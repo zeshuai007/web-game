@@ -30,13 +30,13 @@ const inventoryApi = {
   },
 
   /** 锁定/解锁物品 */
-  toggleLock: async (_itemId: string): Promise<void> => {
+  toggleLock: async (): Promise<void> => {
     await new Promise((r) => setTimeout(r, 200));
   },
 
   /** 分解物品 */
-  decomposeItem: async (_itemId: string): Promise<{ materials: unknown[] }> => {
-    // TODO: http.post(`/inventory/${_itemId}/decompose`)
+  decomposeItem: async (): Promise<{ materials: unknown[] }> => {
+    // TODO: http.post(`/inventory/{itemId}/decompose`)
     await new Promise((r) => setTimeout(r, 300));
     return { materials: [] };
   },

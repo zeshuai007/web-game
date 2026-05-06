@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Flame, Clock, Zap, AlertTriangle, CheckCircle, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { usePlayerStore } from '../../store/playerStore';
-import { useToast } from '../ui/Toast';
+import { useToast } from '../../hooks/useToast';
 import Button from '../ui/Button';
 import ProgressBar from '../ui/ProgressBar';
 import Modal from '../ui/Modal';
