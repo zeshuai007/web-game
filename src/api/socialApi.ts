@@ -12,7 +12,7 @@ const socialApi = {
   },
 
   /** 获取消息列表 */
-  getMessages: async (_channelType: string, _contactId?: string): Promise<Message[]> => {
+  getMessages: async (): Promise<Message[]> => {
     await new Promise((r) => setTimeout(r, 200));
     return mockMessages;
   },

@@ -5,10 +5,9 @@ import { usePlayerStore } from '../../store/playerStore';
 import { mockMapLocations, mockRandomEvents } from '../../mock/index';
 import { LOCATION_TYPE_NAMES } from '../../constants/index';
 import type { MapLocation, RandomEvent } from '../../types/index';
-import { useMotionPrefs } from '../../hooks/useMotionPrefs';
 import Modal from '../ui/Modal';
 import Button from '../ui/Button';
-import { useToast } from '../ui/Toast';
+import { useToast } from '../../hooks/useToast';
 
 const locationTypeIcons: Record<string, string> = {
   spiritVein: '💠',
@@ -32,14 +31,15 @@ const ExploreMap: React.FC = () => {
   const character = usePlayerStore((s) => s.character);
   const updateStamina = usePlayerStore((s) => s.updateStamina);
   const toast = useToast();
-  const { enableMotion } = useMotionPrefs();
   const [selected, setSelected] = useState<MapLocation | null>(null);
   const [event, setEvent] = useState<RandomEvent | null>(null);
   const [showDetail, setShowDetail] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   if (!character) return null;
 
   const handleExplore = (loc: MapLocation) => {
+    if (isAnimating) return;
     if (loc.status === 'locked') {
       toast.warning(`需要达到 ${loc.requiredRealm} 才能进入此地`);
       return;
@@ -48,7 +48,8 @@ const ExploreMap: React.FC = () => {
       toast.error(`体力不足！此处需要 ${loc.requiredStamina} 点体力`);
       return;
     }
-    // 随机触发事件
+    setIsAnimating(true);
+    setTimeout(() => setIsAnimating(false), 1000);
     if (Math.random() > 0.5 && mockRandomEvents.length > 0) {
       const evt = mockRandomEvents[Math.floor(Math.random() * mockRandomEvents.length)];
       setEvent(evt);
@@ -160,7 +161,6 @@ const ExploreMap: React.FC = () => {
             key={loc.id}
             location={loc}
             onClick={() => { setSelected(loc); setShowDetail(true); }}
-            enableMotion={enableMotion}
           />
         ))}
       </div>
@@ -234,10 +234,9 @@ const ExploreMap: React.FC = () => {
 };
 
 /** 地图节点 */
-const MapNode: React.FC<{ location: MapLocation; onClick: () => void; enableMotion: boolean }> = ({
+const MapNode: React.FC<{ location: MapLocation; onClick: () => void }> = ({
   location,
   onClick,
-  enableMotion,
 }) => {
   const color = locationStatusColors[location.status];
   const isBoss = location.type === 'boss';

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { CheckCircle, Clock, Plus, ChevronDown, ChevronUp, Gift } from 'lucide-react';
 import { useQuestStore } from '../../store/questStore';
-import { useToast } from '../ui/Toast';
+import { useToast } from '../../hooks/useToast';
 import Tabs from '../ui/Tabs';
 import Button from '../ui/Button';
 import Badge from '../ui/Badge';

@@ -3,7 +3,7 @@ import { Volume2, Music, Monitor, Globe, ZoomIn, Eye, Users, Bell, LogOut, Trash
 import { useSettingsStore } from '../../store/settingsStore';
 import { useAuthStore } from '../../store/authStore';
 import { useNavigate } from 'react-router-dom';
-import { useToast } from '../ui/Toast';
+import { useToast } from '../../hooks/useToast';
 import Button from '../ui/Button';
 import ConfirmDialog from '../ui/ConfirmDialog';
 import type { SystemSettings } from '../../types/index';

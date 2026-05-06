@@ -29,7 +29,7 @@ const LobbyPage: React.FC = () => {
       onUpdate(v) { setDisplayBP(Math.round(v)); },
     });
     return controls.stop;
-  }, [character?.battlePower]);
+  }, [character]);
 
   if (!character) return null;
 

@@ -35,7 +35,7 @@ export const useSocialStore = create<SocialState>()((set, get) => ({
     set({ contacts: mockContacts, loading: false });
   },
 
-  fetchMessages: async (channel, _contactId) => {
+  fetchMessages: async (channel) => {
     set({ loading: true });
     await new Promise((r) => setTimeout(r, 200));
     const filtered = mockMessages.filter((m) => m.channelType === channel);

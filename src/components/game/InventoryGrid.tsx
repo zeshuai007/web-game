@@ -9,7 +9,7 @@ import Button from '../ui/Button';
 import EmptyState from '../ui/EmptyState';
 import Badge from '../ui/Badge';
 import { Lock, Unlock } from 'lucide-react';
-import { useToast } from '../ui/Toast';
+import { useToast } from '../../hooks/useToast';
 import { useMotionPrefs } from '../../hooks/useMotionPrefs';
 
 const categories: Array<{ key: ItemCategory | 'all'; label: string }> = [

@@ -37,10 +37,10 @@ export const usePlayerStore = create<PlayerState>()((set, get) => ({
   loading: false,
   error: null,
 
-  fetchCharacter: async (userId) => {
+  fetchCharacter: async () => {
     set({ loading: true });
     try {
-      const character = await playerApi.getCharacter(userId);
+      const character = await playerApi.getCharacter();
       set({ character, loading: false });
     } catch (err) {
       set({ loading: false, error: (err as Error).message });

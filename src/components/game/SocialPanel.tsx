@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Send } from 'lucide-react';
 import { useSocialStore } from '../../store/socialStore';
-import { ONLINE_STATUS_NAMES, ONLINE_STATUS_COLORS, CHANNEL_NAMES } from '../../constants/index';
+import { ONLINE_STATUS_NAMES, ONLINE_STATUS_COLORS } from '../../constants/index';
 import type { ChannelType } from '../../types/index';
 import Tabs from '../ui/Tabs';
 import { formatRelativeTime } from '../../utils/index';
