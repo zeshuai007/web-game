@@ -8,13 +8,12 @@
 
 | 技术 | 版本 |
 |---|---|
-| React | 19 |
+| Vue | 3 |
 | TypeScript | 6 |
-| Vite | 8 |
+| Vite | 6 |
 | Tailwind CSS | 4 |
-| Zustand | 5 |
-| Framer Motion | 12 |
-| React Router | 7 |
+| Pinia | 2 |
+| Vue Router | 4 |
 | Axios | 1 |
 
 ## 本地部署指南
@@ -85,21 +84,16 @@ npm run preview
 src/
 ├── api/          # 各模块 HTTP 请求封装（axios）
 ├── assets/       # 静态资源（图片、字体等）
-├── components/   # 可复用 UI 组件及游戏组件
-│   ├── game/     # 游戏专属组件
-│   └── ui/       # 通用 UI 组件
-├── constants/    # 全局常量
-├── layouts/      # 页面布局组件
-├── mock/         # Mock 数据
+├── components/   # 可复用组件
 ├── pages/        # 页面级组件（登录、大厅、修炼、背包等）
 ├── router/       # 路由配置
-├── store/        # 全局状态管理（Zustand）
+├── store/        # 全局状态管理（Pinia）
 ├── styles/       # 全局样式
 ├── types/        # TypeScript 类型定义
 ├── utils/        # 工具函数
 ├── ws/           # WebSocket 相关逻辑
-├── App.tsx       # 应用根组件
-└── main.tsx      # 应用入口
+├── App.vue       # 应用根组件
+└── main.ts       # 应用入口
 ```
 
 ## Vercel 一键部署
@@ -132,7 +126,7 @@ Vercel 会自动检测到这是一个 Vite 项目，无需手动修改以下默�
 
 ### 注意事项
 
-- **SPA 路由**：仓库根目录的 `vercel.json` 配置了路由重写规则，将所有请求回退到 `index.html`，确保 React Router 的 History API 路由（如 `/lobby`、`/cultivation`）在刷新或直接访问时不会返回 404。
+- **SPA 路由**：应用使用 Vue Router 的 History 模式。静态托管环境需要把 `/lobby`、`/cultivation` 等路由回退到 `index.html`，否则刷新或直链访问会 404。
 - **环境变量**：当前版本无需配置环境变量。若后续接入真实后端 API，请在 Vercel 项目的 **Settings → Environment Variables** 中添加以 `VITE_` 为前缀的变量。
 - **WebSocket**：项目包含 WebSocket 逻辑（`src/ws/`），Vercel Serverless 环境不支持持久 WebSocket 连接。若需启用实时功能，请将 WebSocket 服务单独部署，或使用 [Ably](https://ably.com)、[Pusher](https://pusher.com) 等托管服务。
 
