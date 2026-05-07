@@ -8,13 +8,12 @@ A browser-based xianxia cultivation RPG — no download required, play instantly
 
 | Technology | Version |
 |---|---|
-| React | 19 |
+| Vue | 3 |
 | TypeScript | 6 |
-| Vite | 8 |
+| Vite | 6 |
 | Tailwind CSS | 4 |
-| Zustand | 5 |
-| Framer Motion | 12 |
-| React Router | 7 |
+| Pinia | 2 |
+| Vue Router | 4 |
 | Axios | 1 |
 
 ## Local Deployment Guide
@@ -78,21 +77,16 @@ npm run preview
 src/
 ├── api/          # HTTP request modules (axios)
 ├── assets/       # Static assets (images, fonts, etc.)
-├── components/   # Reusable UI and game components
-│   ├── game/     # Game-specific components
-│   └── ui/       # Generic UI components
-├── constants/    # Global constants
-├── layouts/      # Page layout components
-├── mock/         # Mock data
+├── components/   # Reusable components
 ├── pages/        # Page-level components (login, lobby, cultivation, inventory, etc.)
 ├── router/       # Route configuration
-├── store/        # Global state management (Zustand)
+├── store/        # Global state management (Pinia)
 ├── styles/       # Global styles
 ├── types/        # TypeScript type definitions
 ├── utils/        # Utility functions
 ├── ws/           # WebSocket logic
-├── App.tsx       # Root application component
-└── main.tsx      # Application entry point
+├── App.vue       # Root application component
+└── main.ts       # Application entry point
 ```
 
 ## Deploy to Vercel
@@ -125,7 +119,7 @@ Wait for the deployment to finish. Vercel will assign a `*.vercel.app` URL autom
 
 ### Notes
 
-- **SPA routing**: The `vercel.json` at the repository root configures a rewrite rule that falls back all requests to `index.html`, ensuring React Router's History API routes (e.g. `/lobby`, `/cultivation`) do not return 404 on page refresh or direct navigation.
+- **SPA routing**: The app uses Vue Router in History mode. Static hosting must fall back routes such as `/lobby` and `/cultivation` to `index.html`, otherwise refreshes and direct links will 404.
 - **Environment variables**: No environment variables are required for the current version. If you later integrate a real backend API, add variables prefixed with `VITE_` in your Vercel project under **Settings → Environment Variables**.
 - **WebSocket**: The project includes WebSocket logic (`src/ws/`). Vercel's Serverless environment does not support persistent WebSocket connections. If you need real-time features, deploy the WebSocket server separately or use a managed service such as [Ably](https://ably.com) or [Pusher](https://pusher.com).
 
